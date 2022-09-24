@@ -1,0 +1,20 @@
+h2 {
+    color: green;
+}
+
+div {
+    /* background: red; */
+    /* background: rgb(150, 33, 89); */
+    /* background: rgba(150, 33, 89, .8); */
+    /* background: rgb(150 33 89 / 100%); */
+    background: #3b919c;
+    height: 100px;
+    width: 100px;
+}
+
+/* 
+1. color name
+2. color rgb
+3. color rgba
+4. color hexa
+*/
