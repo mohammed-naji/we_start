@@ -7,6 +7,19 @@ body {
     padding: 0;
 }
 
+img {
+    max-width: 100%;
+}
+
+ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
 
 .container {
     width: 80%;

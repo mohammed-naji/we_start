@@ -1,0 +1,69 @@
+@import url(https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap);body,ul{padding:0;margin:0}.wrapper,header .menu ul,header nav{display:flex}body,form input,form textarea{font-family:'Open Sans',sans-serif}.about,.services .card a,footer{text-align:center}body,footer p,ul{margin:0}*{box-sizing:border-box}img{max-width:100%}ul{list-style:none}a{text-decoration:none}.container{width:80%;margin:0 auto}header{background:#f4f4f4;padding:10px 0}header nav{justify-content:space-between;align-items:center}header .menu{width:40%}header .menu.last ul{justify-content:flex-end}header .menu ul li{margin:0 10px}header a{color:#333;transition:.3s}header a:hover{color:#00f}main section{padding-bottom:60px}.wrapper{justify-content:space-between}.ceo .image,.ceo .text,.contact .wrapper>div{width:48%}.ceo .image img{width:100%}.ceo .wrapper{align-items:center}.services .card{width:32%}.services .card a{width:100%;display:block;background:#a70777;padding:10px;border-radius:5px;color:#fff}form input,form textarea{display:block;margin-bottom:20px;padding:10px 15px;border:1px solid #eee;border-radius:5px;outline:0;width:100%}form button{padding:10px 35px;border:0;cursor:pointer;background-color:#a70777;color:#fff;border-radius:5px}footer{background-color:#333;padding:20px;color:#fff}footer a{color:red}
+
+
+#map {
+    height: 350px;
+    width: 100%;
+}
+
+.custom-menu li:before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #000;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.custom-menu li:hover {
+    color: #f00;
+}
+.custom-menu li:hover:before {
+    background: #f00;
+}
+
+.services .card a:hover {
+    background: #f99999;
+}
+
+.services .card:hover a {
+    background: #f99999;
+}
+
+/* .custom-menu li:after {
+    content: 'BB';
+} */
+
+.hero {
+    position: relative;
+    height: 600px;
+}
+
+.hero:after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .4);
+    position: absolute;
+    top: 0;
+}
+
+.hero .content {
+    position: absolute;
+    width: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #fff;
+    z-index: 55;
+}
+
+.hero img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    object-position: bottom;
+}

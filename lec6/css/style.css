@@ -1,0 +1,68 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 2000px;
+}
+
+img {
+    max-width: 100%;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.big {
+    width: 500px;
+    height: 400px;
+    background: #2696eb;
+    position: relative;
+}
+
+.small {
+    width: 100px;
+    height: 100px;
+    background: #ed25c9;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.card {
+    width: 30%;
+    margin: 50px;
+    border: 1px solid #f00;
+    position: relative;
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.card .price {
+    position: absolute;
+    top: 15px;
+    right: 0;
+    background: #07949b;
+    color: #fff;
+    padding: 5px 10px;
+    /* width: 50px;  */
+    text-align: center;
+    transform: translateX(50%);
+}
+
+header {
+    width: 100%;
+    background: #000;
+    height: 50px;
+    position: fixed;
+    top: 0;
+    z-index: 99999999999;
+}
