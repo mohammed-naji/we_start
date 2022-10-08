@@ -83,7 +83,7 @@ age = 'dddd';
 //         console.log('Error');
 // }
 
-let number = [1, 5 , 5, 8, 6, 10];
+// let number = [1, 5 , 5, 8, 6, 10];
 // console.log(number[0]);
 // for( let i = 0 ; i < 6 ; i++ ) {
 //     console.log(number[i]);
@@ -94,8 +94,8 @@ let number = [1, 5 , 5, 8, 6, 10];
 // i++ 
 // ++i
 
-let i = 0;
-while(i < 6) {
-    console.log(number[i] + ' Whileeee')
-    i++;
-}
+// let i = 0;
+// while(i < 6) {
+//     console.log(number[i] + ' Whileeee')
+//     i++;
+// }
