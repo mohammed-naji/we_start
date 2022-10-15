@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="app" v-cloak>
+        <div class="wrapper">
+            <div class="input-wrapper">
+                <form @submit.prevent="fetchData" action="">
+                    <!-- <input type="text" placeholder="Github username.." @input="event => username = event.target.value" :value="username"/> -->
+                    <input type="text" placeholder="Github username.." v-model="username"/>
+                </form>
+            </div>
+
+            <div class="result-wrapper">
+                <div class="userimage">
+                    <img :src="image" alt="">
+                    <h2>{{ name }}</h2>
+                </div>
+
+                <div class="repos">
+                    <ul>
+                        <li v-for="repo in repos"><a :href="repo.url">{{ repo.name }}</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+[v-cloak] {
+    display: none;
+}

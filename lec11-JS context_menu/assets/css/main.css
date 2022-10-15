@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Cairo', sans-serif;
+  src: url("../fonts/Cairo-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Cairo', sans-serif;
+  src: url("../fonts/Cairo-Medium.ttf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Cairo', sans-serif;
+  src: url("../fonts/Cairo-Bold.ttf");
+  font-weight: 600;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  text-align: right;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.3s;
+  height: 2000px;
+}
+
+.toggle-color {
+  width: 50px;
+  height: 50px;
+  background-color: #FFF;
+  border: 0;
+  box-shadow: 0 0 35px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100vw;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.toggle-color:hover {
+  transform: scale(1.1);
+}
+
+.toggle-color svg path {
+  fill: #323a4b;
+  stroke: #323a4b
+}
+
+.toggle-color .light {
+  display: none;
+}
+
+/* context mneu style */
+.custom-menu {
+  display: none;
+  width: 200px;
+  min-height: auto;
+  background: #FFF;
+  box-shadow: 0 0 25px 0 rgb(0 0 0 / 5%);
+  position: fixed;
+  z-index: 999;
+  border-radius: 10px;
+  padding: 8px 0;
+  overflow: hidden;
+}
+
+.custom-menu ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.custom-menu ul li {
+  width: 100%;
+}
+
+.custom-menu ul a {
+  color: #444444;
+  padding:5px 15px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  width: 100%;
+  border-bottom: 1px solid #DDD;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.custom-menu ul a:last-child {
+  border-bottom: 0;
+}
+
+.custom-menu ul a:hover {
+  background: #f8f8f8;
+}
+
+
+/* add dark class */
+
+body.dark {
+  background: #323a4b;
+}
+
+body.dark .toggle-color {
+  background-color: #202736;
+}
+
+body.dark .toggle-color svg path {
+  fill: #FFF;
+  stroke: #FFF
+}
+
+body.dark .toggle-color .dark {
+  display: none;
+}
+
+body.dark .toggle-color .light {
+  display: block;
+}
+
+body.dark .custom-menu {
+  background: #293142;
+}
+
+body.dark .custom-menu ul a {
+  color: #FFF;
+}
+
+body.dark .custom-menu ul a:hover {
+  background: #455866;
+}

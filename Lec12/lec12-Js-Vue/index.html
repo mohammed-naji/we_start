@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="app1" v-cloak>
+
+        <div v-for="post in posts">
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.content }}</p>
+        </div>
+
+        <!-- <div :class="{ 'dark' : isDark }">
+            <button @click="darkMood()">{{ isDark ? 'Light' : 'Dark' }}</button>
+
+            <h1 v-if="name">{{ name }}</h1>
+            <h1 v-else>No Name Provide</h1>
+
+            <p>{{ desc }}</p>
+            <div v-html="content"></div>
+            <div v-text="content"></div>
+
+            <ul>
+                <li v-for="person in persons" style="display: flex; align-items: center"><h2>{{ person.name }}</h2> - <span> {{ person.age }}</span></li>
+            </ul>
+        </div> -->
+
+    </div>
+
+    <!-- <div class="app2">
+
+        <h1>{{ name }}</h1>
+        <p>{{ desc }}</p>
+        ddddddddddd
+
+    </div> -->
+    
+    <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
