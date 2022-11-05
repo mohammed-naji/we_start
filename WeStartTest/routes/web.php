@@ -9,14 +9,17 @@
 // Route::delete('uri', 'action');
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SiteController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 
-Route::match(['put', 'patch'], 'update', function() {
-    return 'Update file';
-});
+// Route::match(['put', 'patch'], 'update', function() {
+//     return 'Update file';
+// });
 
-Route::any('privacy-policy', function() {
-    return 'Done';
-});
+// Route::any('privacy-policy', function() {
+//     return 'Done';
+// });
 
 // Route::get('/', function() {
 //     return 'Homepage - Get';
@@ -56,30 +59,57 @@ Route::any('privacy-policy', function() {
 // })->whereAlpha('name')->whereNumber('age')->whereAlphaNumeric('username');
 // ->where('name', '[a-zA-Z]+');
 
-Route::prefix('admin')->name('admin.')->group(function() {
-    Route::get('home1', function() { return 'admin home1'; })->name('home1');
-    Route::get('home2', function() { return 'admin home2'; })->name('home2');
-    Route::get('home3', function() { return 'admin home3'; })->name('home3');
-    Route::get('home4', function() { return 'admin home4'; })->name('home4');
-    Route::get('home5', function() { return 'admin home5'; })->name('home5');
-    Route::get('home6', function() { return 'admin home6'; })->name('home6');
-    Route::get('home7', function() { return 'admin home7'; })->name('home7');
-});
 
-Route::get('contact-usssssssssssss', function() {
-    return 'aaaaa';
-})->name('contactpage');
+// Route::get('contact-usssssssssssss', function() {
+//     return 'aaaaa';
+// })->name('contactpage');
 
 // Route::view('test','welcome');
 
-?>
+// include 'admin.php';
 
-<!-- <a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a>
-<a href="route('contactpage')">Contact Us</a> -->
+// home, about, contact, team, services
+
+// $name = 'Ali';
+// define('NAME', 'Ali');
+// NAME
+
+Route::get('/', [SiteController::class, 'index'])->name('home');
+Route::get('/about', [SiteController::class, 'about'])->name('about');
+Route::get('/contact', [SiteController::class, 'contact'])->name('contact');
+Route::get('/team', [SiteController::class, 'team'])->name('team');
+Route::get('/services', [SiteController::class, 'services'])->name('services');
+Route::get('/services/{id?}', [SiteController::class, 'services_single'])->name('services_single');
+
+// Route::get('only-admin', AdminController::class);
+
+// CRUD Application
+// C => Create => INSERT
+// R => Read => SELECT
+// U => Update => UPDATE
+// D => Delete => DELETE
+
+// Create => GET, POST
+// Read => all items GET, single item GET
+// Update => GET, PUT
+// Delete => DELETE
+
+// Route::get('products', [ProductController::class, 'index'])->name('products.index');
+
+// Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
+// Route::post('products', [ProductController::class, 'store'])->name('products.store');
+
+// Route::get('products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+// Route::get('products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit');
+// Route::put('products/{id}', [ProductController::class, 'update'])->name('products.update');
+
+// Route::delete('products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+// Route::resource('products', ProductController::class)->except(
+//     'show'
+// );
+
+// Route::resource('products', ProductController::class)->names([
+//     'destroy' => 'delete_product'
+// ]);
