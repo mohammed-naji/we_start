@@ -13,9 +13,34 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::paginate(10);
+
+        // dd($request->all());
+
+        $count = 10;
+
+        if($request->has('count')) {
+            $count = $request->count;
+            // if($request->count == 'all') {
+            //     $count = Post::count();
+
+            // }
+        }
+
+
+        $posts = Post::orderByDesc('id')->paginate($count);
+
+        if($request->has('search')) {
+            $posts = Post::where('title', 'like', '%'.$request->search.'%')->orderByDesc('id')->paginate($count);
+        }
+
+        // $posts = Post::latest('id')->paginate(10);
+        // $posts = Post::orderByDesc('id')->simplepaginate(10);
+        // $posts = Post::orderByDesc('id')->get();
+
+
+
 
         // dd($posts);
 
@@ -29,7 +54,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -40,7 +65,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required|image|mimes:png,jpg,jpeg',
+            'content' => ['required'],
+        ]);
+
+        dd($request->all());
     }
 
     /**

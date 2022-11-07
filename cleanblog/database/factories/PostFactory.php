@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,10 @@ class PostFactory extends Factory
      */
     public function definition()
     {
+        $title = fake()->unique()->words(4, true);
         return [
-            'title' => fake()->words(4, true) ,
+            'title' => $title ,
+            'slug' => Str::slug($title),
             'image' => fake()->imageUrl() ,
             'content' => fake()->sentences(5, true),
             // 'content' => fake()->paragraphs(5, true),

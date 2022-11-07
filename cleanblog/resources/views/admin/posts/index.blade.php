@@ -18,6 +18,21 @@
 <!-- Page Heading -->
 <h1 class="h3 mb-4 text-gray-800">All Posts</h1>
 
+<form id="search-form" method="GET" action="{{ route('admin.posts.index') }}">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Search here.." name="search" value="{{ request()->search }}">
+        <select name="count" onchange="document.getElementById('search-form').submit()">
+            <option {{ request()->count == 10 ? 'selected' : '' }} value="10">10</option>
+            <option {{ request()->count == 15 ? 'selected' : '' }} value="15">15</option>
+            <option {{ request()->count == 20 ? 'selected' : '' }} value="20">20</option>
+            <option @selected(request()->count == $posts->total()) value="{{ $posts->total() }}">All</option>
+        </select>
+        <div class="input-group-append">
+          <button class="btn btn-dark px-4" id="button-addon2">Button</button>
+        </div>
+      </div>
+</form>
+
 <table class="table table-bordered table-hover table-striped">
     <tr class="bg-dark text-white">
         <th>ID</th>
@@ -56,5 +71,6 @@
 
 </table>
 
-{{ $posts->links() }}
+{{-- {{ $posts->appends(['search' => request()->search, 'count' => request()->count])->links() }} --}}
+{{ $posts->appends($_GET)->links() }}
 @stop
