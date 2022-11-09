@@ -1,10 +1,10 @@
 @extends('admin.master')
 
-@section('title', 'All Posts | ' . env('APP_NAME'))
+@section('title', 'Edit Post | ' . env('APP_NAME'))
 
 @section('content')
 <!-- Page Heading -->
-<h1 class="h3 mb-4 text-gray-800">Add new Post</h1>
+<h1 class="h3 mb-4 text-gray-800">Edit Post</h1>
 
 {{-- @dump($errors)
 @dump($errors->any())
@@ -12,13 +12,15 @@
 
 @include('admin.errors')
 
-<form action="{{ route('admin.posts.store') }}" method="POST" enctype="multipart/form-data">
+<form action="{{ route('admin.posts.update', $post->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
+    @method('put')
+
     {{-- <input type="text" name="_token" value="{{ csrf_token() }}">
     {{ csrf_field() }} --}}
     <div class="mb-3">
         <label>Title</label>
-        <input type="text" name="title" placeholder="Title" class="form-control @error('title') is-invalid @enderror">
+        <input type="text" name="title" placeholder="Title" class="form-control @error('title') is-invalid @enderror" value="{{ old('title', $post->title) }}">
         @error('title')
             <small class="invalid-feedback">{{ $message }}</small>
         @enderror
@@ -30,11 +32,12 @@
         @error('image')
             <small class="invalid-feedback">{{ $message }}</small>
         @enderror
+        <img width="100" src="{{ asset('uploads/'.$post->image) }}" alt="">
     </div>
 
     <div class="mb-3">
         <label>Content</label>
-        <textarea name="content" placeholder="Cotnent" class="form-control @error('content') is-invalid @enderror" rows="5"></textarea>
+        <textarea name="content" placeholder="Cotnent" class="form-control @error('content') is-invalid @enderror" rows="5">{{ old('content', $post->content) }}</textarea>
         @error('content')
             <small class="invalid-feedback">{{ $message }}</small>
         @enderror

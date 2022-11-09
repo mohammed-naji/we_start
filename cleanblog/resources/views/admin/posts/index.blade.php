@@ -48,15 +48,21 @@
         <tr>
             <td>{{ $post->id }}</td>
             <td>{{ $post->title }}</td>
-            <td><img width="100" src="{{ $post->image }}" alt=""></td>
+            <td><img width="100" src="{{ asset('uploads/'.$post->image) }}" alt=""></td>
             <td>{{ $post->user_id }}</td>
-            <td>{{ $post->created_at }}</td>
-            <td>{{ $post->updated_at }}</td>
+            <td>{{ $post->created_at->format('F d, Y') }}</td>
+            <td>{{ $post->updated_at->diffForHumans() }}</td>
             <td>
                 {{-- <div class="btn-group"> --}}
                     <a href="#" class="btn btn-success btn-sm"><i class="fas fa-eye"></i></a>
-                    <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
-                    <a href="#" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                    <a href="{{ route('admin.posts.edit', $post->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
+                    {{-- <a href="{{ route('admin.posts.destroy', $post->id) }}" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a> --}}
+                    <form class="d-inline" action="{{ route('admin.posts.destroy', $post->id) }}" method="post">
+                        @csrf
+                        @method('delete')
+
+                        <button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                    </form>
                 {{-- </div> --}}
             </td>
         </tr>

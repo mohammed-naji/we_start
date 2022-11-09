@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -63,15 +67,66 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'image' => 'required|image|mimes:png,jpg,jpeg',
-            'content' => ['required'],
+        // dd($request->all());
+        // validation
+        // $request->validate([
+        //     'title' => 'required',
+        //     'image' => 'required|image|mimes:png,jpg,jpeg',
+        //     'content' => ['required'],
+        // ], [
+        //     'title.required' => 'العنوان مطلوب',
+        //     'content.required' => 'الوصف مطلوب'
+        // ]);
+
+        // $validator = Validator::make($request->all(), [
+        //     'title' => 'required',
+        //     'image' => 'required|image|mimes:png,jpg,jpeg',
+        //     'content' => ['required'],
+        // ], [
+        //     'title.required' => 'العنوان مطلوب',
+        //     'content.required' => 'الوصف مطلوب'
+        // ])->validate();
+
+        // if($validator->fails()) {
+        //     // return [
+        //     //     'status' => 0,
+        //     //     'message' => 'There is an error',
+        //     //     'data' => []
+        //     // ];
+        //     return redirect()->back()
+        //                 ->withErrors($validator)
+        //                 ->withInput();
+        // }
+
+        // return  $this->removescript( $request->title );
+
+        // Upload File
+        // $imgname = $request->file('image')->getClientOriginalName();
+        $path = $request->file('image')->store('/', 'custom');
+        // $path = $request->file('image')->move(public_path('images'), $imgname);
+
+        // Save in Database
+        // $post = new Post();
+        // $post->title = $request->title;
+        // $post->slug = Str::slug($request->title);
+        // $post->image = $path;
+        // $post->content = $request->content;
+        // $post->user_id = 1;
+        // $post->save();
+        $title = $this->removescript($request->title);
+        Post::create([
+            'title' => $title,
+            'slug' => Str::slug($title),
+            'image' => $path,
+            'content' => $this->removescript($request->content),
+            'user_id' => 1
         ]);
 
-        dd($request->all());
+        // Redirect
+        return redirect()->route('admin.posts.index');
+        // dd($path);
     }
 
     /**
@@ -82,7 +137,9 @@ class PostController extends Controller
      */
     public function show($id)
     {
-        //
+        return 'Show';
+        // $post = Post::find($id);
+        // dd($post);
     }
 
     /**
@@ -91,9 +148,9 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', compact('post'));
     }
 
     /**
@@ -103,9 +160,24 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        $path = $post->image;
+        if($request->hasFile('image')) {
+            $path = $request->file('image')->store('/', 'custom');
+        }
+        // $path = $request->file('image')->move(public_path('images'), $imgname);
+
+        $title = $this->removescript($request->title);
+        $post->update([
+            'title' => $title,
+            'image' => $path,
+            'content' => $this->removescript($request->content),
+            'updated_by' => 1
+        ]);
+
+        // Redirect
+        return redirect()->route('admin.posts.index');
     }
 
     /**
@@ -116,6 +188,33 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Post::destroy($id);
+        return redirect()->route('admin.posts.index');
+    }
+
+    public function trash()
+    {
+        $posts = Post::onlyTrashed()->orderByDesc('id')->paginate(10);
+        return view('admin.posts.trash', compact('posts'));
+    }
+
+    public function restore(Post $post)
+    {
+        $post->restore();
+        return redirect()->route('admin.posts.index');
+        // $post->update(['deleted_at' => null]);
+    }
+
+    public function forcedelete(Post $post)
+    {
+        File::delete(public_path('uploads/'.$post->image));
+        $post->forcedelete();
+        return redirect()->route('admin.posts.index');
+        // $post->update(['deleted_at' => null]);
+    }
+
+    private function removescript($input) {
+        $input = str_replace('<script>', '', $input);
+        return str_replace('</script>', '', $input);
     }
 }

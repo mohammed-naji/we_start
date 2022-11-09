@@ -47,6 +47,7 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('admin.posts.index') }}">All Posts</a>
                 <a class="collapse-item" href="{{ route('admin.posts.create') }}">Add New</a>
+                <a class="collapse-item" href="{{ route('admin.posts.trash') }}">Trash</a>
             </div>
         </div>
     </li>
