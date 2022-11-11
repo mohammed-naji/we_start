@@ -18,6 +18,8 @@
 <!-- Page Heading -->
 <h1 class="h3 mb-4 text-gray-800">All Posts</h1>
 
+<p>This is test add to github</p>
+
 <form id="search-form" method="GET" action="{{ route('admin.posts.index') }}">
     <div class="input-group mb-3">
         <input type="text" class="form-control" placeholder="Search here.." name="search" value="{{ request()->search }}">
