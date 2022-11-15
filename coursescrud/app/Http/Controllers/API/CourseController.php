@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class CourseController extends Controller
 {
@@ -18,7 +19,7 @@ class CourseController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Done',
-            'data' => Course::all()
+            'data' => Course::latest('id')->get()
         ], 200);
     }
 
@@ -58,7 +59,11 @@ class CourseController extends Controller
      */
     public function show(Course $course)
     {
-        //
+        return response()->json([
+            'status' => 1,
+            'message' => 'Done',
+            'data' => $course
+        ], 200);
     }
 
     /**
@@ -73,6 +78,7 @@ class CourseController extends Controller
         //
     }
 
+
     /**
      * Remove the specified resource from storage.
      *
@@ -81,6 +87,12 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
+        File::delete(public_path('/uploads/'.$course->image));
+        return response()->json([
+            'status' => 1,
+            'message' => 'Done',
+            'data' => $course->delete()
+        ], 200);
+
     }
 }

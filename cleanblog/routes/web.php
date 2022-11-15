@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\PostController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\AdminController;
 
-Route::prefix('admin')->name('admin.')->group(function() {
+Route::prefix('admin')->name('admin.')->middleware('admin', 'auth')->group(function() {
     Route::get('/', [AdminController::class, 'index'])->name('index');
 
     // /posts/{post}
@@ -19,3 +20,10 @@ Route::prefix('admin')->name('admin.')->group(function() {
 // Route::fallback(function() {
 //     return 'dddddd';
 // });
+
+Route::view('/', 'welcome');
+Route::view('/not-allowed', 'not_allowed');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

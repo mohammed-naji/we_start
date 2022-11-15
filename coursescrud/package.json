@@ -13,5 +13,8 @@
         "vite": "^3.0.0",
         "vue": "^3.2.36",
         "vue-router": "^4.0.13"
+    },
+    "dependencies": {
+        "sweetalert2": "^11.6.8"
     }
 }
