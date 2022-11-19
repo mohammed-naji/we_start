@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Course;
 use App\Models\Post;
 use App\Models\Profile;
+use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use PhpParser\Builder\Class_;
 
 class RelationController extends Controller
@@ -79,6 +82,44 @@ class RelationController extends Controller
         return $comment;
     }
 
+    public function many_to_many()
+    {
+        // $course = Course::find(3);
+
+        // dd($course->students);
+
+
+        $std = Student::find(2);
+        $courses = Course::all();
+        return view('many_to_many', compact('std', 'courses'));
+    }
+
+    public function many_to_many_data(Request $request)
+    {
+
+        // dd($request->all());
+
+        $data = $request->marks;
+
+        foreach($data as $id => $mark) {
+            if(is_null($mark['mark'])) {
+                unset($data[$id]);
+            }
+        }
+
+        $std = Student::find(2);
+
+        // $std->courses()->attach( $request->courses );
+        // $std->courses()->detach( $request->courses );
+        $std->courses()->sync( $data );
+
+        // DB::table('course_student')->insert([
+
+        // ])
+        // dd($request->all());
+
+        return redirect()->back();
+    }
 }
 
 

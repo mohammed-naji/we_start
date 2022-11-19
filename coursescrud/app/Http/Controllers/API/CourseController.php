@@ -19,7 +19,7 @@ class CourseController extends Controller
         return response()->json([
             'status' => 1,
             'message' => 'Done',
-            'data' => Course::latest('id')->get()
+            'data' => Course::latest('id')->paginate(2)
         ], 200);
     }
 
@@ -31,6 +31,11 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'title' => 'required',
+            'image' => 'required'
+        ]);
+
         // return 'ffff';
         $imgname = time().rand().$request->file('image')->getClientOriginalName();
         $request->file('image')->move(public_path('/uploads'), $imgname);
@@ -75,7 +80,30 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        //
+
+        if($request->image != $course->image) {
+            File::delete(public_path('/uploads/'.$course->image));
+
+            $imgname = time().rand().$request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('/uploads'), $imgname);
+        }else {
+            $imgname = $request->image;
+        }
+
+        $course = $course->update([
+            'title' => $request->title,
+            'image' => $imgname,
+            'description' => $request->description,
+            'price' => $request->price,
+            'discount' => $request->discount,
+        ]);
+
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Done',
+            'data' => $course
+        ], 200);
     }
 
 

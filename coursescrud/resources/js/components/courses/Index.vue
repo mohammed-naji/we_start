@@ -2,6 +2,8 @@
 import axios from "axios";
 import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router'
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
+
 
 let router = useRouter();
 
@@ -11,11 +13,11 @@ onMounted(() => {
   getCourses();
 });
 
-const getCourses = () => {
-  axios.get("/api/v1/courses")
+const getCourses = (page = 1) => {
+  axios.get("/api/v1/courses?page="+page)
   .then((res) => {
     courses.value = res.data.data;
-    // console.log(res.data.data);
+    console.log(res.data.data);
   });
 };
 
@@ -71,7 +73,7 @@ const editCourse = (id) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="course in courses" :key="course.id">
+        <tr v-for="course in courses.data" :key="course.id">
           <td>{{ course.id }}</td>
           <td>{{ course.title }}</td>
           <td><img width="100" :src="'uploads/'+course.image" alt=""></td>
@@ -88,6 +90,11 @@ const editCourse = (id) => {
         </tr>
       </tbody>
     </table>
+
+    <Bootstrap5Pagination
+        :data="courses"
+        @pagination-change-page="getCourses"
+    />
   </div>
 </template>
 

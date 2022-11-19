@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PostController;
@@ -21,7 +22,13 @@ Route::prefix('admin')->name('admin.')->middleware('admin', 'auth')->group(funct
 //     return 'dddddd';
 // });
 
-Route::view('/', 'welcome');
+// Route::view('/', 'welcome');
+Route::get('/', function() {
+    $post = Post::find(2);
+
+    return view('post', compact('post'));
+});
+
 Route::view('/not-allowed', 'not_allowed');
 
 Auth::routes();

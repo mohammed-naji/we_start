@@ -15,6 +15,7 @@
         "vue-router": "^4.0.13"
     },
     "dependencies": {
+        "laravel-vue-pagination": "^4.0.0",
         "sweetalert2": "^11.6.8"
     }
 }

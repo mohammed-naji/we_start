@@ -13,6 +13,8 @@ let course = ref({
     discount: ''
 });
 
+let errors = ref([]);
+
 const updateImage = (e) => {
     // console.log(e.target.files[0]);
     course.value.image = e.target.files[0]
@@ -35,6 +37,8 @@ const addCourse = () => {
 
     axios.post('/api/v1/courses', formData, config)
     .then(res => {
+        // console.log(res);
+
         router.push('/')
 
         Toast.fire({
@@ -42,17 +46,33 @@ const addCourse = () => {
             title: 'Course added successfully'
         })
     })
+    .catch(err => {
+        // console.log(err.response.data.errors);
+        errors.value = err.response.data.errors;
+    })
 }
 
 </script>
 <template>
     <div class="container mt-5">
 
+        <!-- {{ errors }} -->
+        <!-- {{ errors.title }} -->
+
+        <div v-if="Object.keys( errors ).length > 0" class="alert alert-danger">
+
+            <p v-for="(err, i) in errors" :key="i">
+            {{ err[0] }}
+            </p>
+
+        </div>
+
         <h1>Add New Course</h1>
         <form action="" @submit.prevent="addCourse">
         <div class="mb-3">
             <label>Title</label>
-            <input type="text" placeholder="Title" class="form-control" v-model="course.title" />
+            <input type="text" placeholder="Title" class="form-control" :class="{ 'is-invalid' : errors.title }" v-model="course.title" />
+            <span class="invalid-feedback" v-if="errors.title">{{ errors.title[0] }}</span>
         </div>
 
         <div class="mb-3">
