@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('trackings', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
+            $table->foreignId('order_id');
             $table->timestamps();
         });
     }

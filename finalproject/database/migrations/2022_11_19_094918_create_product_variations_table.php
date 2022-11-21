@@ -15,6 +15,9 @@ return new class extends Migration
     {
         Schema::create('product_variations', function (Blueprint $table) {
             $table->id();
+            $table->string('type');
+            $table->string('value');
+            $table->double('extraprice')->nullable();
             $table->timestamps();
         });
     }

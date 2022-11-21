@@ -15,6 +15,13 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('code');
+            $table->enum('type', ['value', 'percentage'])->default('value');
+            $table->double('value');
+            $table->date('expire');
+            $table->integer('usage');
+            $table->foreignId('product_id')->nullable();
             $table->timestamps();
         });
     }
