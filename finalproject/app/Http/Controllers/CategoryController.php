@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -38,7 +39,21 @@ class CategoryController extends Controller
      */
     public function store(CategoryRequest $request)
     {
-        dd($request->all());
+        $image = $request->file('image')->store('uploads/categories', 'custom');
+
+
+        $category = Category::create([
+            'name' => 40,
+            'slug' => Str::slug($request->en_name),
+            'parent_id' => $request->parent_id
+        ]);
+
+        $category->image()->create([
+            'path' => $image,
+            'feature' => 1
+        ]);
+
+        return redirect()->route('admin.categories.index')->with('msg', 'Category created successfullly')->with('type', 'success');
     }
 
     /**
