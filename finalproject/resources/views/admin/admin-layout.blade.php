@@ -21,7 +21,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <link rel="stylesheet" href="{{ asset('adminassets/dist/css/custom.css') }}">
   @endif
 
+  <style>
+    .table img {
+        height: 70px;
+        object-fit: cover;
+    }
+  </style>
 
+  @stack('styles')
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -86,7 +93,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <a class="nav-link" data-toggle="dropdown" href="#">
             <div class="user-panel pb-3 d-flex">
                 <div class="image">
-                  <img style="width: 1.8rem" src="{{ asset('adminassets/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2" alt="User Image') }}">
+                  <img style="width: 1.8rem;height: 1.8rem;object-fit:cover" src="{{ asset(Auth::user()->image->path) }}" class="img-circle elevation-2" alt="User Image') }}">
                 </div>
                 <div class="info">
                   {{ Auth::user()->name }}
@@ -94,11 +101,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </div>
         </a>
         <div class="dropdown-menu dropdown-menu-right">
-          <a href="#" class="dropdown-item">
+          <a href="{{ route('admin.profile.edit') }}" class="dropdown-item">
             <i class="fas fa-user mr-2"></i> {{ __('admin.Profile') }}
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
+          <a href="{{ route('admin.settings') }}" class="dropdown-item">
             <i class="fas fa-cog mr-2"></i> {{ __('admin.Settings') }}
           </a>
           <div class="dropdown-divider"></div>
@@ -159,5 +166,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="{{ asset('adminassets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
 <script src="{{ asset('adminassets/dist/js/adminlte.min.js') }}"></script>
+@stack('scripts')
 </body>
 </html>

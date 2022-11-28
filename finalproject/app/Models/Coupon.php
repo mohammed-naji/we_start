@@ -2,14 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\Trans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Coupon extends Model
 {
-    use HasFactory;
+    use HasFactory, Trans;
 
     protected $guarded = [];
+
+    protected $appends = ['trans_name', 'en_name', 'ar_name'];
 
     public function products()
     {

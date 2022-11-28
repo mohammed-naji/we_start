@@ -30,10 +30,21 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        $request->user()->fill([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone
+        ]);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
+        }
+
+        if($request->hasFile('image')) {
+            $image = $request->file('image')->store('uploads/users', 'custom');
+            $request->user()->image()->updateOrCreate([
+                'path' => $image
+            ]);
         }
 
         $request->user()->save();

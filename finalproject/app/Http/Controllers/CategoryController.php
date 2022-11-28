@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\CategoryRequest;
+use Illuminate\Support\Facades\File;
 
 class CategoryController extends Controller
 {
@@ -16,7 +17,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::latest('id')->paginate(10);
+        // $categories = Category::withoutGlobalScope('parents')->latest('id')->paginate(10);
+        $categories = Category::parents()->latest('id')->paginate(10);
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -43,7 +45,7 @@ class CategoryController extends Controller
 
 
         $category = Category::create([
-            'name' => 40,
+            'name' => '',
             'slug' => Str::slug($request->en_name),
             'parent_id' => $request->parent_id
         ]);
@@ -64,7 +66,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return $category->load('parent', 'image');
     }
 
     /**
@@ -85,9 +87,23 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(CategoryRequest $request, Category $category)
     {
-        //
+        $category->update([
+            'name' => '',
+            'parent_id' => $request->parent_id
+        ]);
+
+        if($request->hasFile('image')) {
+            $image = $request->file('image')->store('uploads/categories', 'custom');
+            $category->image()->update([
+                'path' => $image
+            ]);
+        }
+
+
+        // return $category;
+        return $category->load('parent', 'image');
     }
 
     /**
@@ -98,6 +114,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        File::delete(public_path($category->image->path));
+        $category->image()->delete();
+        $category->delete();
+
+        return redirect()->back();
     }
 }

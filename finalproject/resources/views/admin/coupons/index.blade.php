@@ -1,15 +1,19 @@
 @push('scripts')
     <script>
         function edit_category(id) {
-            let url = '{{ route("admin.categories.index") }}/'+id;
+            let url = '{{ route("admin.coupons.index") }}/'+id;
             $.get({
                 url,
                 success: (res) => {
                     $('#editModal form').attr('action', url)
                     $('#editModal input[name=en_name]').val(res.en_name)
                     $('#editModal input[name=ar_name]').val(res.ar_name)
-                    $('#editModal img').attr('src', '/'+res.image.path)
-                    $('#editModal select').val(res.parent_id)
+                    $('#editModal input[name=code]').val(res.code)
+                    $('#editModal select[name=type]').val(res.type)
+                    $('#editModal input[name=value]').val(res.value)
+                    $('#editModal input[name=expire]').val(res.expire)
+                    $('#editModal input[name=usage]').val(res.usage)
+                    $('#editModal select[name=product_id]').val(res.product_id)
                 }
             })
         }
@@ -27,19 +31,20 @@
                 contentType: false,
                 processData: false,
                 success: (res) => {
-                    console.log(res);
-                    // $('#row_'+res.id+' td:nth-child(2)').text(res.trans_name);
-                    // $('#row_'+res.id+' td:nth-child(3) img').attr('src', '/'+res.image.path)
-                    // $('#row_'+res.id+' td:nth-child(4)').text(res.parent.trans_name);
+                    $('#row_'+res.id+' td:nth-child(2)').text(res.trans_name);
+                    $('#row_'+res.id+' td:nth-child(3)').text(res.code);
+                    $('#row_'+res.id+' td:nth-child(4)').text(res.usage);
+                    $('#row_'+res.id+' td:nth-child(5)').text(res.expire);
 
-                    // $('#editModal').modal('hide')
+                    $('#editModal').modal('hide')
                 }
             })
         })
     </script>
 @endpush
 
-<x-admin-layout :title="'All Categories'">
+
+<x-admin-layout :title="'All Coupons'">
 
     <div class="content">
         <div class="container-fluid">
@@ -53,33 +58,32 @@
                     @endif
 
                     <div>
-                        <h2>All categories</h2>
+                        <h2>All coupons</h2>
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="bg-dark">
                                     <th>ID</th>
                                     <th>Name</th>
-                                    <th>Image</th>
-                                    <th>Parent</th>
-                                    <th>Created At</th>
+                                    <th>Code</th>
+                                    <th>Usage</th>
+                                    <th>Expire</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @forelse ($categories as $category)
-                                    <tr id="row_{{ $category->id }}">
+                                @forelse ($coupons as $coupon)
+                                    <tr id="row_{{ $coupon->id }}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $category->trans_name }}</td>
-                                        <td><img width="70" src="{{ asset($category->image->path??'') }}" alt="">
-                                        </td>
-                                        <td>{{ $category->parent->trans_name }}</td>
-                                        <td>{{ $category->created_at->format('F m, Y') }}</td>
+                                        <td>{{ $coupon->trans_name }}</td>
+                                        <td>{{ $coupon->code }}</td>
+                                        <td>{{ $coupon->usage }}</td>
+                                        <td>{{ $coupon->expire }}</td>
                                         <td>
-                                            <a onclick="edit_category({{ $category->id }})" data-id="{{ $category->id }}" data-toggle="modal" data-target="#editModal"
+                                            <a onclick="edit_category({{ $coupon->id }})" data-id="{{ $coupon->id }}" data-toggle="modal" data-target="#editModal"
                                                 class="btn btn-primary btn-sm btn-edit"><i class="fas fa-edit"></i></a>
                                             <form class="d-inline"
-                                                action="{{ route('admin.categories.destroy', $category->id) }}"
+                                                action="{{ route('admin.coupons.destroy', $coupon->id) }}"
                                                 method="post">
                                                 @csrf
                                                 @method('delete')
@@ -95,7 +99,7 @@
                                 @endforelse
                             </tbody>
                         </table>
-                        {{ $categories->links() }}
+                        {{ $coupons->links() }}
                     </div>
                 </div>
             </div>
@@ -107,7 +111,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Edit Category</h5>
+                    <h5 class="modal-title" id="editModalLabel">Edit Coupon</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -130,22 +134,52 @@
                                     <input type="text" name="ar_name" class="form-control" placeholder="Arabic Name">
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="inputImage">Image</label>
-                            <input type="file" name="image" class="form-control" id="inputImage">
-                            <img width="60" src="" alt="">
-                        </div>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Code</label>
+                                    <input type="text" name="code" class="form-control" placeholder="Code">
+                                </div>
+                            </div>
 
-                        <div class="form-group">
-                            <label>Parent</label>
-                            <select name="parent_id" class="form-control custom-select">
-                                <option value="">-- Select --</option>
-                                @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->trans_name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Type</label>
+                                    <select name="type" class="form-control custom-select">
+                                        <option value="value">Value</option>
+                                        <option value="percentage">Percentage</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Value</label>
+                                    <input type="text" name="value" class="form-control" placeholder="Value">
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Expire</label>
+                                    <input type="date" name="expire" class="form-control" placeholder="Expire">
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Usage</label>
+                                    <input type="number" name="usage" class="form-control" placeholder="Usage">
+                                </div>
+                            </div>
+
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Product</label>
+                                    <select name="product_id" class="form-control custom-select">
+                                    </select>
+                                </div>
+                            </div>
                         </div>
 
                     </div>

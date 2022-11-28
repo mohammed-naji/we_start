@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Traits\Trans;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory, Trans;
 
     protected $guarded = [];
+
+    protected $appends = ['trans_name', 'en_name', 'ar_name'];
 
     public function parent()
     {
@@ -31,30 +35,15 @@ class Category extends Model
         return $this->morphOne(Image::class, 'imageable');
     }
 
-    public function setNameAttribute()
+    protected static function booted()
     {
-        $name = [
-            'en' => request()->en_name,
-            'ar' => request()->ar_name
-        ];
-
-        $name = json_encode($name, JSON_UNESCAPED_UNICODE);
-
-        $this->attributes['name'] = $name;
+        // static::addGlobalScope('parents', function (Builder $builder) {
+        //     $builder->whereNull('parent_id');
+        // });
     }
 
-    public function getTransNameAttribute()
+    public function scopeParents($query)
     {
-        return json_decode( $this->name, true )[app()->getLocale()];
-    }
-
-    public function getEnNameAttribute()
-    {
-        return json_decode( $this->name, true )['en'];
-    }
-
-    public function getArNameAttribute()
-    {
-        return json_decode( $this->name, true )['ar'];
+        return $query->whereNull('parent_id');
     }
 }

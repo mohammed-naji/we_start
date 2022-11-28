@@ -1,10 +1,14 @@
 <x-admin-layout title="Add New Category">
-    <br>
-    <h1>Add New Category</h1>
     <div class="content">
         <div class="container-fluid">
+            <br>
+            <h2>Add New Category</h2>
+            <br>
             <div class="row">
                 <div class="col-md-12">
+
+                    <x-errors />
+
                     <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card card-primary">
@@ -35,7 +39,7 @@
                                 <select name="parent_id" class="form-control custom-select">
                                     <option value="">-- Select --</option>
                                     @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    <option value="{{ $category->id }}">{{ $category->trans_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
