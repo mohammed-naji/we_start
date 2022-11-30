@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Models\Category;
@@ -45,3 +46,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+
+Route::get('send-sms', [NotifyController::class, 'send_sms']);

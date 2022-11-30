@@ -11,6 +11,15 @@ class SiteController extends Controller
 {
     public function contact(Request $request)
     {
-        Mail::to('admin@amin.com')->send(new ContactMail());
+        // return $request->all();
+        $data = $request->except('cv');
+
+        $cv = $request->file('cv')->store('uploads/cv', 'custom');
+
+        $data['cv'] = $cv;
+
+        // return $data;
+
+        Mail::to('ahmed.alghoul98@gmail.com')->queue(new ContactMail($data));
     }
 }
