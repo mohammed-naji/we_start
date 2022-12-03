@@ -23,6 +23,7 @@ Route::prefix(LaravelLocalization::setLocale())->middleware('auth')->group(funct
 
         Route::resource('categories', CategoryController::class);
         Route::resource('products', ProductController::class);
+        Route::post('add-new-image', [ProductController::class, 'add_image'])->name('add_image');
         Route::resource('coupons', CouponController::class);
         Route::resource('roles', RoleController::class);
 
@@ -49,3 +50,5 @@ require __DIR__.'/auth.php';
 
 
 Route::get('send-sms', [NotifyController::class, 'send_sms']);
+
+// malqumbuz@gmail.com
