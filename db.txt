@@ -1,0 +1,120 @@
+users
+-- id
+-- name
+-- email
+-- phone
+-- country
+-- city
+-- street
+-- zipcode
+-- points
+-- type
+-- role_id
+
+wallet ** Futuer
+
+categories
+-- id
+-- name
+-- slug
+-- parent
+
+products
+-- id
+-- name
+-- desc
+-- smalldesc
+-- price
+-- featured
+-- quantity
+-- category_id
+
+reviews
+-- id
+-- comment
+-- star
+-- product_id
+-- user_id
+
+product_variation
+-- id
+-- type
+-- value
+-- price
+
+image => morph
+-- id
+-- path
+-- type
+-- feature
+-- parent_id
+
+coupons
+-- id
+-- title
+-- code
+-- type
+-- value
+-- expire
+-- usage
+-- product_id
+
+carts
+-- id
+-- user_id
+-- product_id
+-- product_variation_id
+-- price
+-- quantity
+-- coupon_id
+
+orders
+-- id
+-- user_id
+-- status
+-- total
+-- address
+
+order_items
+-- id
+-- user_id
+-- product_id
+-- price
+-- quantity
+-- coupon_id
+-- order_id
+
+trackings
+-- id
+-- code
+-- order_id
+
+payments
+-- id
+-- user_id
+-- total
+-- transaction_id
+
+roles
+-- id
+-- name
+
+permission
+-- id
+-- code
+-- name
+
+permission_role
+permission_id
+role_id
+
+
+
+
+
+
+
+
+
+
+
