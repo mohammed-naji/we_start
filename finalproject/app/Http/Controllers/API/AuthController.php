@@ -21,36 +21,20 @@ class AuthController extends Controller
         ]);
 
         if($validator->fails()) {
-            return response()->json([
-                'status' => 0,
-                'message' => $validator->getMessageBag()
-            ], 422);
+
+            return BaseController::msg(0, $validator->getMessageBag(), 422);
         }
 
         $user = User::whereEmail($request->email)->first();
         if($user) {
-
             if(Hash::check($request->password, $user->password)) {
                 Auth::login($user);
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'Login Successfully',
-                    'user' => $request->user()
-                ], 200);
+                return BaseController::msg(1, 'Login Successfully', 200, $request->user());
             }else {
-                return response()->json([
-                    'status' => 1,
-                    'message' => 'Password does not match',
-                    'user' => []
-                ], 200);
+                return BaseController::msg(1, 'Password does not match', 404);
             }
-
         }else {
-            return response()->json([
-                'status' => 1,
-                'message' => 'There is no user found',
-                'user' => []
-            ], 200);
+            return BaseController::msg(1, 'There is no user found', 404);
         }
 
         // if(Auth::attempt($request->all())) {

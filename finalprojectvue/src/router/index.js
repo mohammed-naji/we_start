@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useUserStore } from '../stores/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,7 +35,7 @@ const router = createRouter({
     {
       path: '/contact-us',
       name: 'contact',
-      component: () => import('../views/ShopView.vue')
+      component: () => import('../views/ContactView.vue')
     },
     {
       path: '/login',
@@ -66,12 +67,42 @@ const router = createRouter({
       name: 'account',
       component: () => import('../views/AccountView.vue')
     },
+    ,
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('../views/CheckoutView.vue'),
+      meta: {
+        Auth: true
+      }
+    },
+    {
+      path: '/:path(.*)*',
+      name: 'notFound',
+      component: () => import('../views/NotFoundView.vue'),
+      meta: {
+        title: '404 - Final Project'
+      }
+    },
   ]
 })
 
 const DEFAULT_TITLE = 'Final Project';
 router.afterEach((to) => {
   document.title = to.meta.title || DEFAULT_TITLE;
+});
+
+router.beforeEach((to, from, next) => {
+  
+  const user = useUserStore().getUser;
+
+  // console.log(user);
+
+  if(!user && to.meta.Auth) {
+    router.push('/login')
+  }
+
+  next();
 });
 
 export default router

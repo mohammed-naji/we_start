@@ -3,17 +3,17 @@
 namespace App\Traits;
 
 trait Trans {
-    public function setNameAttribute()
-    {
-        $name = [
-            'en' => request()->en_name,
-            'ar' => request()->ar_name
-        ];
+    // public function setNameAttribute()
+    // {
+    //     $name = [
+    //         'en' => request()->en_name,
+    //         'ar' => request()->ar_name
+    //     ];
 
-        $name = json_encode($name, JSON_UNESCAPED_UNICODE);
+    //     $name = json_encode($name, JSON_UNESCAPED_UNICODE);
 
-        $this->attributes['name'] = $name;
-    }
+    //     $this->attributes['name'] = $name;
+    // }
 
     public function setSmalldescAttribute()
     {

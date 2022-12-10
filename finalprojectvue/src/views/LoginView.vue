@@ -1,19 +1,64 @@
+<script setup>
+import { onMounted, ref } from "vue";
+import { useUserStore } from '../stores/user'
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+
+const user = useUserStore();
+
+// onMounted(e => {
+    
+//     console.log(user.getUser);
+// })
+
+
+
+    // let form = ref({
+    //     email: '',
+    //     password: ''
+    // });
+
+    let email = ref();
+    let password = ref();
+    let error = ref('')
+
+    const login = () => {
+
+        axios.post('/login', {
+            email: email.value,
+            password: password.value,
+        })
+        .then(res => {
+            // console.log(res);
+            error.value = res.data.message
+            user.updateUser(res.data.user)
+            router.push('/')
+        })
+
+        // console.log(email.value, password.value );
+    }
+
+</script>
 <template>
   <div class="contain py-16">
         <div class="max-w-lg mx-auto shadow px-6 py-7 rounded overflow-hidden">
+            <div v-if="error" class="p-5 text-red-800 rounded my-4 bg-red-200">
+                <p class="m-0">{{ error }}</p>
+            </div>
             <h2 class="text-2xl uppercase font-medium mb-1">Login</h2>
             <p class="text-gray-600 mb-6 text-sm">
                 welcome back customer
             </p>
-            <form action="#" method="post" autocomplete="off">
+            <form action="#" @submit.prevent="login" method="post" autocomplete="off">
                 <div class="space-y-2">
                     <div>
                         <label for="email" class="text-gray-600 mb-2 block">Email address</label>
-                        <input type="email" name="email" id="email" class="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400" placeholder="youremail.@domain.com">
+                        <input type="email" name="email" id="email" class="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400" placeholder="youremail.@domain.com" v-model="email">
                     </div>
                     <div>
                         <label for="password" class="text-gray-600 mb-2 block">Password</label>
-                        <input type="password" name="password" id="password" class="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400" placeholder="*******">
+                        <input type="password" name="password" id="password" class="block w-full border border-gray-300 px-4 py-3 text-gray-600 text-sm rounded focus:ring-0 focus:border-primary placeholder-gray-400" placeholder="*******" v-model="password">
                     </div>
                 </div>
                 <div class="flex items-center justify-between mt-6">

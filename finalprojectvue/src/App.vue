@@ -1,5 +1,17 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
+import { onMounted, ref } from "@vue/runtime-core";
+import { useUserStore } from "./stores/user";
+
+const user = useUserStore();
+
+const logout = () => {
+  user.updateUser(null)
+
+  // return false;
+}
+
 </script>
 
 <template>
@@ -79,11 +91,21 @@ import { RouterLink, RouterView } from "vue-router";
           <RouterLink to="/shop" class="text-gray-200 hover:text-white transition">Shop</RouterLink>
           <RouterLink to="/about-us" class="text-gray-200 hover:text-white transition">About Us</RouterLink>
           <RouterLink to="/contact-us" class="text-gray-200 hover:text-white transition">Contact Us</RouterLink>
+          <RouterLink to="/checkout" class="text-gray-200 hover:text-white transition">Checkout</RouterLink>
         </div>
         <div>
+          <template v-if="user.user">
+            <RouterLink @click.prevent="logout" to="/logout" class="text-gray-200 ml-4 hover:text-white transition" disabled>Logout</RouterLink>
+          </template>
+          <template v-else>
+            <RouterLink to="/login" class="text-gray-200 ml-4 hover:text-white transition">Login</RouterLink>
+            <RouterLink to="/register" class="text-gray-200 ml-4 hover:text-white transition">Register</RouterLink>
+          </template>
+        </div>
+        <!-- <div>
           <RouterLink to="/login" class="text-gray-200 ml-4 hover:text-white transition">Login</RouterLink>
           <RouterLink to="/register" class="text-gray-200 ml-4 hover:text-white transition">Register</RouterLink>
-        </div>
+        </div> -->
       </div>
     </div>
   </nav>

@@ -1,3 +1,13 @@
+<script setup>
+import { onMounted } from '@vue/runtime-core';
+import { useUserStore } from '../stores/user'
+const user = useUserStore();
+
+onMounted(e => {
+    console.log(user.getUser);
+})
+</script>
+
 <template>
     <!-- banner -->
     <div class="bg-cover bg-no-repeat bg-center py-36" style="background-image: url('src/assets/images/banner-bg.jpg');">
