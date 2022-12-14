@@ -235,16 +235,7 @@
                                                     <label>Colors</label>
 
                                                     <div class="color-wrapper">
-                                                        <div class="row">
-                                                            <div class="col-8">
-                                                                <input type="text" name="variation[colors][0][value]" class="form-control"
-                                                                placeholder="Value">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" name="variation[colors][0][price]" class="form-control"
-                                                                placeholder="Value">
-                                                            </div>
-                                                        </div>
+
                                                     </div>
 
                                                     <button class="btn btn-sm btn-primary mt-2 add_feild" data-type="color">Add</button>
@@ -255,16 +246,7 @@
                                                 <div class="form-group">
                                                     <label>Sizes</label>
                                                     <div class="size-wrapper">
-                                                        <div class="row">
-                                                            <div class="col-8">
-                                                                <input type="text" name="variation[sizes][0][value]" class="form-control"
-                                                                placeholder="Value">
-                                                            </div>
-                                                            <div class="col-4">
-                                                                <input type="text" name="variation[sizes][0][price]" class="form-control"
-                                                                placeholder="Value">
-                                                            </div>
-                                                        </div>
+
                                                     </div>
 
                                                     <button class="btn btn-sm btn-primary mt-2 add_feild" data-type="size">Add</button>

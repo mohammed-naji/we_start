@@ -1,11 +1,22 @@
 <script setup>
-import { onMounted } from '@vue/runtime-core';
+import { onMounted, ref } from 'vue';
 import { useUserStore } from '../stores/user'
 const user = useUserStore();
+const home_categories = ref()
 
 onMounted(e => {
     console.log(user.getUser);
+    getHomeCategories();
 })
+
+
+const getHomeCategories = () => {
+    axios.get('/home-categories')
+    .then(res => {
+        home_categories.value = res.data.data;
+    })
+}
+
 </script>
 
 <template>
@@ -58,37 +69,10 @@ onMounted(e => {
     <div class="container py-16">
         <h2 class="text-2xl font-medium text-gray-800 uppercase mb-6">shop by category</h2>
         <div class="grid grid-cols-3 gap-3">
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-1.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Bedroom</a>
-            </div>
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-2.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Mattrass</a>
-            </div>
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-3.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Outdoor
-                </a>
-            </div>
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-4.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Sofa</a>
-            </div>
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-5.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Living
-                    Room</a>
-            </div>
-            <div class="relative rounded-sm overflow-hidden group">
-                <img src="src/assets/images/category/category-6.jpg" alt="category 1" class="w-full">
-                <a href="#"
-                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">Kitchen</a>
+            <div v-for="cat in home_categories" :key="cat.id" class="relative rounded-sm overflow-hidden group">
+                <img :src="cat.image" :alt="cat.name" class="w-full">
+                <a :href="'/category/'+cat.slug"
+                    class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-xl text-white font-roboto font-medium group-hover:bg-opacity-60 transition">{{ cat.name }}</a>
             </div>
         </div>
     </div>

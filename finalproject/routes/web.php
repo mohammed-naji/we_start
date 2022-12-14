@@ -52,3 +52,9 @@ require __DIR__.'/auth.php';
 Route::get('send-sms', [NotifyController::class, 'send_sms']);
 
 // malqumbuz@gmail.com
+
+
+// $abc = new Route();
+// $abc::get('/test', function() {
+//     return 'tesssssstttt';
+// });

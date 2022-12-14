@@ -12,6 +12,10 @@ const logout = () => {
   // return false;
 }
 
+onMounted(e => {
+  user.updateCart();
+})
+
 </script>
 
 <template>
@@ -53,7 +57,7 @@ const logout = () => {
           <div class="text-xs leading-3">Cart</div>
           <div
             class="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
-            2
+            {{ user.cart.length }}
           </div>
         </RouterLink>
         <RouterLink to="/account" class="text-center text-gray-700 hover:text-primary transition relative" activeClass="text-primary">
@@ -95,7 +99,8 @@ const logout = () => {
         </div>
         <div>
           <template v-if="user.user">
-            <RouterLink @click.prevent="logout" to="/logout" class="text-gray-200 ml-4 hover:text-white transition" disabled>Logout</RouterLink>
+            <!-- <RouterLink @click.prevent="logout" to="/logout" class="text-gray-200 ml-4 hover:text-white transition" disabled>Logout</RouterLink> -->
+            <a @click.prevent="logout" href="/logout" class="text-gray-200 ml-4 hover:text-white transition">Logout</a>
           </template>
           <template v-else>
             <RouterLink to="/login" class="text-gray-200 ml-4 hover:text-white transition">Login</RouterLink>

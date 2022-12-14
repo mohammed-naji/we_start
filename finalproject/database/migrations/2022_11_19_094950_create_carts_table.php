@@ -17,8 +17,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('product_id');
-            $table->foreignId('product_variation_id');
-            $table->foreignId('coupon_id');
+            $table->foreignId('product_variation_id')->nullable();
+            $table->foreignId('coupon_id')->nullable();
             $table->double('price');
             $table->integer('quantity');
             $table->timestamps();

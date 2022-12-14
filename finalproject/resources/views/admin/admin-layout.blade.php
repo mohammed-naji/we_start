@@ -93,7 +93,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <a class="nav-link" data-toggle="dropdown" href="#">
             <div class="user-panel pb-3 d-flex">
                 <div class="image">
-                  <img style="width: 1.8rem;height: 1.8rem;object-fit:cover" src="{{ asset(Auth::user()->image->path) }}" class="img-circle elevation-2" alt="User Image') }}">
+
+                  <img style="width: 1.8rem;height: 1.8rem;object-fit:cover" src="{{ Auth::user()->image_url }}" class="img-circle elevation-2" alt="User Image') }}">
                 </div>
                 <div class="info">
                   {{ Auth::user()->name }}

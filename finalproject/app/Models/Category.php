@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use App\Traits\Trans;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
@@ -39,6 +40,18 @@ class Category extends Model
     {
         // static::addGlobalScope('parents', function (Builder $builder) {
         //     $builder->whereNull('parent_id');
+        // });
+
+        // static::creating(function($value) {
+        //     $slug = Str::slug(request()->en_name);
+
+        //     // $count = Category::whereSlug($slug)->count();
+        //     $count = Category::where('slug', 'like', $slug.'%')->count();
+        //     if($count) {
+        //         $slug = $slug.'-'.$count;
+        //     }
+
+        //     $value->slug = $slug;
         // });
     }
 

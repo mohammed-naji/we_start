@@ -39,7 +39,7 @@ class Product extends Model
 
     public function coupons()
     {
-        return $this->hasMany(Coupon::class);
+        return $this->hasOne(Coupon::class);
     }
 
     public function carts()

@@ -64,7 +64,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('admin.products.create') }}" class="nav-link {{ active('admin.products.create') }}{{ active('admin.categories.index') }}">
+                <a href="{{ route('admin.products.create') }}" class="nav-link {{ active('admin.products.create') }}">
                   <i class="far fa-circle nav-icon"></i>
                   <p>{{ __('admin.Add New') }}</p>
                 </a>

@@ -32,7 +32,8 @@ const user = useUserStore();
         .then(res => {
             // console.log(res);
             error.value = res.data.message
-            user.updateUser(res.data.user)
+            user.updateUser(res.data.data.user)
+            user.updateToken(res.data.data.token)
             router.push('/')
         })
 
@@ -84,8 +85,8 @@ const user = useUserStore();
             </div>
             <!-- ./login with -->
 
-            <p class="mt-4 text-center text-gray-600">Don't have account? <a href="register.html" class="text-primary">Register
-                    now</a></p>
+            <p class="mt-4 text-center text-gray-600">Don't have account? <router-link to="/register" class="text-primary">Register
+                    now</router-link></p>
         </div>
     </div>
 </template>

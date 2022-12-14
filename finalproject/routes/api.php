@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/v1/user', function (Request $request) {
     return $request->user();
 });
 
@@ -29,4 +29,8 @@ Route::prefix('v1')->group(function() {
     Route::post('/register', [AuthController::class, 'register']);
 
     Route::get('/home-categories', [SiteController::class, 'home_categories']);
+
+    Route::get('/products', [SiteController::class, 'products']);
+    Route::get('/cart', [SiteController::class, 'cart']);
+    Route::post('/add-to-cart', [SiteController::class, 'add_to_cart']);
 });
