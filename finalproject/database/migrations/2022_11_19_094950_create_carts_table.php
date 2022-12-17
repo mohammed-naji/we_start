@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('product_variation_id')->nullable();
             $table->foreignId('coupon_id')->nullable();
             $table->double('price');
-            $table->integer('quantity');
+            $table->integer('quantity')->default(0);
             $table->timestamps();
         });
     }

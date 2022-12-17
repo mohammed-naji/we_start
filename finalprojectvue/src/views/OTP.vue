@@ -1,4 +1,10 @@
 <script setup>
+import axios from "axios";
+import { ref, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useUserStore } from '../stores/user'
+const router = useRouter();
+
 
 const focusNext = (e) => {
     var regex = /[0-9]|/;
@@ -19,6 +25,38 @@ const focusNext = (e) => {
     
 }
 
+const number = ref({
+    n1: null,
+    n2: null,
+    n3: null,
+    n4: null,
+    n5: null,
+    n6: null,
+})
+
+const user = useUserStore();
+
+const config = {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${user.token}`
+    }
+}
+
+const applyOTP = () => {
+    
+    // console.log(number.value);
+
+    axios.post('/verify-otp', {
+        number: number.value
+    }, config)
+    .then(res => {
+        user.updateOtp(res.data)
+        router.push('/');
+    })
+
+}
+
 </script>
 <template>
   <div class="contain py-16">
@@ -28,13 +66,13 @@ const focusNext = (e) => {
                 Verify your registration
             </p>
             <form action="#" method="post" autocomplete="off">
-                <div class="grid grid-cols-5">
-                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" />
-                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" />
-                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" />
-                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" />
-                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" />
-                    
+                <div class="grid grid-cols-6 gap-2">
+                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n1" />
+                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n2" />
+                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n3" />
+                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n4" />
+                    <input @keyup="focusNext" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n5" />
+                    <input @keyup="applyOTP" class="block w-full border border-gray-300 px-3 py-4 text-center text-gray-600 text-2xl rounded focus:ring-0 focus:border-primary placeholder-gray-400" maxlength="1" v-model="number.n6" />
                 </div>
             </form>
         </div>

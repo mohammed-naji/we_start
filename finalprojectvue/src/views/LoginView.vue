@@ -30,10 +30,11 @@ const user = useUserStore();
             password: password.value,
         })
         .then(res => {
-            // console.log(res);
+            console.log(res);
             error.value = res.data.message
             user.updateUser(res.data.data.user)
             user.updateToken(res.data.data.token)
+            user.addCartToUser();
             router.push('/')
         })
 

@@ -25,7 +25,7 @@ const user = useUserStore();
         .then(res => {
             user.updateUser(res.data.data.user)
             user.updateToken(res.data.data.token)
-            router.push('/')
+            router.push('/otp')
         })
         .catch(err => {
           error.value = err.response.data.message

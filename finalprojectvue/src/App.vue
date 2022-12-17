@@ -7,7 +7,7 @@ import { useUserStore } from "./stores/user";
 const user = useUserStore();
 
 const logout = () => {
-  user.updateUser(null)
+  user.logOutUser()
 
   // return false;
 }
@@ -57,7 +57,8 @@ onMounted(e => {
           <div class="text-xs leading-3">Cart</div>
           <div
             class="absolute -right-3 -top-1 w-5 h-5 rounded-full flex items-center justify-center bg-primary text-white text-xs">
-            {{ user.cart.length }}
+            <!-- {{ user.user }} -->
+            {{ user.cart ? user.cart.length : 0 }}
           </div>
         </RouterLink>
         <RouterLink to="/account" class="text-center text-gray-700 hover:text-primary transition relative" activeClass="text-primary">

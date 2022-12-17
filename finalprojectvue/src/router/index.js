@@ -30,6 +30,7 @@ const router = createRouter({
     {
       path: '/product/:slug',
       name: 'product',
+      props: true,
       component: () => import('../views/ProductView.vue')
     },
     {
@@ -98,8 +99,14 @@ router.beforeEach((to, from, next) => {
 
   // console.log(user);
 
+  
+
   if(!user && to.meta.Auth) {
     router.push('/login')
+  }
+
+  if(user && !user.otp_verified_at && to.meta.Auth ) {
+    router.push('/otp')
   }
 
   next();

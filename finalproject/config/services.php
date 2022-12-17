@@ -31,4 +31,10 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'hotsms' => [
+        'user' => env('HOTSMS_USER'),
+        'pass' => env('HOTSMS_PASS'),
+        'sender' => env('HOTSMS_SENDER')
+    ]
+
 ];

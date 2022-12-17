@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Services\SMS;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Base
@@ -64,7 +66,7 @@ class AuthController extends Base
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users,email',
             'phone' => 'required',
             // 'password' => 'required|confirmed',
             'password' => ['required', 'confirmed'],
@@ -76,15 +78,24 @@ class AuthController extends Base
             return $this->msg(0, "There is an error in your data", 422);
         }
 
+        $otp = rand(000000,999999);
+
+        $msg = "Thanks for registration your OTP is $otp";
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
+            'otp_code' => $otp
         ]);
 
+        Auth::login($user);
+
+        // SMS::send($request->phone, $msg);
+
         $data = [
-            'user' => $user,
+            'user' => $user->refresh(),
             'token' => $user->createToken('register')->accessToken
         ];
 

@@ -9,8 +9,10 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.2.1",
     "axios": "^1.2.1",
+    "izitoast": "^1.4.0",
     "pinia": "^2.0.16",
     "pinia-plugin-persistedstate": "^3.0.1",
+    "toastr": "^2.1.4",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2"
   },

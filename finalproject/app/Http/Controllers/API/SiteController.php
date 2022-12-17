@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
-use App\Http\Resources\HomeCategoriesResource;
-use App\Http\Resources\ProductsResource;
-use App\Mail\ContactMail;
 use App\Models\Cart;
-use App\Models\Category;
+use App\Models\User;
 use App\Models\Product;
+use App\Models\Category;
+use App\Mail\ContactMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Resources\ProductsResource;
+use App\Http\Resources\HomeCategoriesResource;
 
 
 class SiteController extends Base
@@ -55,15 +57,22 @@ class SiteController extends Base
         return $this->msg(1, 'All Categories with products', 200, $data);
     }
 
+    public function product($slug)
+    {
+        $data = new ProductsResource(Product::where('slug', $slug)->with('image', 'gallery', 'variations', 'category')->first());
+        return $this->msg(1, 'Product Single', 200, $data);
+    }
+
     public function add_to_cart(Request $request)
     {
 
         $product = Product::find($request->product_id);
 
-        Cart::create([
+        Cart::updateOrCreate([
             'product_id' => $request->product_id,
             'user_id' => $request->user_id,
-            'quantity' => $request->quantity,
+        ], [
+            'quantity' => DB::raw('quantity + ' . $request->quantity),
             'price' => $product->price
         ]);
 
@@ -72,5 +81,27 @@ class SiteController extends Base
     public function cart(Request $request)
     {
         return Cart::where('user_id', $request->user_id)->get();
+    }
+
+    public function add_to_user(Request $request)
+    {
+        Cart::where('user_id', $request->user_token)->update(['user_id' => $request->user_id]);
+
+        return Cart::where('user_id', $request->user_id)->get();
+    }
+
+    public function verify_otp(Request $request)
+    {
+        $code = implode($request->number);
+        $user = $request->user();
+
+        $update = User::where('id', $user->id)->where('otp_code', $code)->update(['otp_verified_at' => now()]);
+
+        if($update) {
+            return now();
+        }else {
+            return null;
+        }
+
     }
 }

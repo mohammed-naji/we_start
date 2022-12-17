@@ -5,8 +5,11 @@ const user = useUserStore();
 
 const products = ref();
 
+const loading = ref(false) 
+
 onMounted(e => {
   getProducts();
+  // toastr.success("rrrr")
 });
 
 const getProducts = () => {
@@ -17,7 +20,11 @@ const getProducts = () => {
 }
 
 const add_to_cart = (id) => {
+  loading.value = true;
   user.addToCart(id)
+  toastr.success("Product added to cart")
+  // iziToast.success("rrrr")
+  // loading.value = false;
 }
 
 </script>
@@ -321,13 +328,13 @@ const add_to_cart = (id) => {
             </div>
           </div>
           <div class="pt-4 pb-3 px-4">
-            <a href="#">
+            <router-link :to="'/product/'+product.slug">
               <h4
                 class="uppercase font-medium text-xl mb-2 text-gray-800 hover:text-primary transition"
               >
                 {{ product.name }}
               </h4>
-            </a>
+            </router-link>
             <div class="flex items-baseline mb-1 space-x-2">
               <template v-if="product.coupons">
                 <p class="text-xl text-primary font-semibold">
@@ -358,7 +365,7 @@ const add_to_cart = (id) => {
           </div>
           <button @click="add_to_cart(product.id)"
             class="block w-full py-1 text-center text-white bg-primary border border-primary rounded-b hover:bg-transparent hover:text-primary transition"
-            >Add to cart</button>
+            >Add To Cart</button>
         </div>
 
       </div>

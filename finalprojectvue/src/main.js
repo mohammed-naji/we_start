@@ -9,8 +9,15 @@ import './assets/style.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 
 import axios from 'axios'
+import toastr from 'toastr'
+import 'toastr/build/toastr.min.css'
+
+import iziToast from 'izitoast'
+import 'iziToast/dist/css/iziToast.min.css'
 
 window.axios = axios;
+window.toastr = toastr;
+window.iziToast = iziToast;
 
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api/v1';
 

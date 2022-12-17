@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore({
@@ -62,6 +62,24 @@ export const useUserStore = defineStore({
       .then(res => {
         this.updateCart();
       })
+    },
+    logOutUser() {
+      this.user = null,
+      this.token =null,
+      this.updateCart();
+    },
+    addCartToUser() {
+      let user_token = localStorage.getItem('user_token');
+      axios.post('/assign-cart-to-user', {
+        user_token: user_token,
+        user_id : this.user.id
+      })
+      .then(res => {
+        this.cart = res.data;
+      })
+    },
+    updateOtp(time) {
+      this.user.otp_verified_at = time
     }
   },
   persist: true,
