@@ -32,6 +32,7 @@ Route::prefix('v1')->group(function() {
 
     Route::get('/products', [SiteController::class, 'products']);
     Route::get('/products/{slug}', [SiteController::class, 'product']);
+    Route::get('/related_products/{id}/{category_id}', [SiteController::class, 'related_products']);
     Route::get('/cart', [SiteController::class, 'cart']);
     Route::post('/add-to-cart', [SiteController::class, 'add_to_cart']);
     Route::post('/assign-cart-to-user', [SiteController::class, 'add_to_user']);

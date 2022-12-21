@@ -1,7 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '../stores/user'
 
+let locale = window.location.pathname.replace(/^\/([^\/]+).*/i,'$1');
+// console.log(locale);
+
 const router = createRouter({
+  // base: (locale.trim().length && locale != "/") ? '/' + locale : undefined,
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {

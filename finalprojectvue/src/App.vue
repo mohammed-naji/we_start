@@ -11,15 +11,27 @@ const logout = () => {
 
   // return false;
 }
+const lang = ref('')
 
 onMounted(e => {
+  lang.value = localStorage.getItem('locale') ?? 'ar';
   user.updateCart();
 })
+
+
+
+
+const chanegLang = (e) => {
+  lang.value = e.$i18n.locale
+  localStorage.setItem('locale', e.$i18n.locale)
+}
+
 
 </script>
 
 <template>
-  <!-- header -->
+  <div :class="{rtl : lang == 'ar'}">
+    <!-- header -->
   <header class="py-4 shadow-sm bg-white">
     <div class="container flex items-center justify-between">
       <RouterLink to="/">
@@ -107,6 +119,9 @@ onMounted(e => {
             <RouterLink to="/login" class="text-gray-200 ml-4 hover:text-white transition">Login</RouterLink>
             <RouterLink to="/register" class="text-gray-200 ml-4 hover:text-white transition">Register</RouterLink>
           </template>
+          <select v-model="$i18n.locale" @change="chanegLang(this)">
+            <option v-for="locale in $i18n.availableLocales" :key="`locale-${locale}`" :value="locale">{{ locale }}</option>
+          </select>
         </div>
         <!-- <div>
           <RouterLink to="/login" class="text-gray-200 ml-4 hover:text-white transition">Login</RouterLink>
@@ -205,10 +220,15 @@ onMounted(e => {
     </div>
   </div>
   <!-- ./copyright -->
+  </div>
 </template>
 
 <style>
 body {
     font-family: Poppins, sans-serif;
+}
+
+body .rtl {
+  direction: rtl;
 }
 </style>

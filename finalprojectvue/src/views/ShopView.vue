@@ -1,19 +1,28 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useUserStore } from "../stores/user";
+import { useI18n } from "vue-i18n";
+
 const user = useUserStore();
 
 const products = ref();
 
 const loading = ref(false) 
 
+const lang = ref('')
+
 onMounted(e => {
+  lang.value = localStorage.getItem('locale') ?? 'ar';
   getProducts();
   // toastr.success("rrrr")
 });
 
 const getProducts = () => {
-    axios.get('/products')
+    axios.get('/products', {
+      params: {
+        lang: lang.value
+      }
+    })
     .then(res => {
       products.value = res.data.data;
     })

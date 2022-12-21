@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Mail\ContactMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\ProductsResource;
@@ -53,14 +54,21 @@ class SiteController extends Base
 
     public function products()
     {
-        $data = ProductsResource::collection(Product::with('image', 'gallery', 'variations', 'category')->get());
+        App::setlocale(request()->lang);
+        $data = ProductsResource::collection(Product::with('image', 'gallery', 'variations', 'category', 'reviews')->get());
         return $this->msg(1, 'All Categories with products', 200, $data);
     }
 
     public function product($slug)
     {
-        $data = new ProductsResource(Product::where('slug', $slug)->with('image', 'gallery', 'variations', 'category')->first());
+        $data = new ProductsResource(Product::where('slug', $slug)->with('image', 'gallery', 'variations', 'category', 'reviews')->first());
         return $this->msg(1, 'Product Single', 200, $data);
+    }
+
+    public function related_products($id, $category_id)
+    {
+        $data = ProductsResource::collection(Product::where('category_id', $category_id)->where('id', '!=', $id)->with('image', 'gallery', 'variations', 'category', 'reviews')->get());
+        return $this->msg(1, 'Related Products', 200, $data);
     }
 
     public function add_to_cart(Request $request)

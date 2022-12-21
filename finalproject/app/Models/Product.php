@@ -19,7 +19,7 @@ class Product extends Model
 
     public function gallery()
     {
-        return $this->morphMany(Image::class, 'imageable')->where('feature', 0);
+        return $this->morphMany(Image::class, 'imageable');
     }
 
     public function image()
@@ -50,5 +50,18 @@ class Product extends Model
     public function order_items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function getFinalPriceAttribute()
+    {
+        $coupon = $this->coupons;
+        if($coupon) {
+            if($coupon->type == 'value') {
+                return $this->price - $coupon->value;
+            }else {
+                return $this->price - (($coupon->value / 100) * $this->price);
+            }
+        }
+        return $this->price;
     }
 }
