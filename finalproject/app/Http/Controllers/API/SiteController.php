@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CartResource;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\ProductsResource;
 use App\Http\Resources\HomeCategoriesResource;
-
+use App\Models\Coupon;
 
 class SiteController extends Base
 {
@@ -80,15 +81,15 @@ class SiteController extends Base
             'product_id' => $request->product_id,
             'user_id' => $request->user_id,
         ], [
+            'coupon_id' => $product->coupons ? $product->coupons->id : null,
             'quantity' => DB::raw('quantity + ' . $request->quantity),
-            'price' => $product->price
+            'price' => $product->final_price
         ]);
-
     }
 
     public function cart(Request $request)
     {
-        return Cart::where('user_id', $request->user_id)->get();
+        return CartResource::collection(Cart::where('user_id', $request->user_id)->get());
     }
 
     public function add_to_user(Request $request)
@@ -110,6 +111,26 @@ class SiteController extends Base
         }else {
             return null;
         }
+    }
 
+    public function check_user_wallet($id, $total)
+    {
+        $wallet = User::find($id)->wallet;
+
+        if($wallet >= $total) {
+            return 'Done';
+        }else {
+            return 'Error';
+        }
+    }
+
+    public function purchase(Request $request)
+    {
+        // return $request->all();
+        $stripeCharge = $request->user()->charge(
+            $request->amount * 100, $request->payment_method_id
+        );
+
+        return $stripeCharge;
     }
 }

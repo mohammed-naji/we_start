@@ -37,4 +37,6 @@ Route::prefix('v1')->group(function() {
     Route::post('/add-to-cart', [SiteController::class, 'add_to_cart']);
     Route::post('/assign-cart-to-user', [SiteController::class, 'add_to_user']);
     Route::post('/verify-otp', [SiteController::class, 'verify_otp'])->middleware('auth:api');
+    Route::post('/check-user-wallet/{user_id}/{total}', [SiteController::class, 'check_user_wallet']);
+    Route::post('/purchase', [SiteController::class, 'purchase'])->middleware('auth:api');
 });

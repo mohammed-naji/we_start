@@ -1,3 +1,86 @@
+<script setup>
+
+import { loadStripe } from '@stripe/stripe-js'
+
+import { onMounted, ref } from "vue";
+
+import { useUserStore } from "../stores/user";
+
+const user = useUserStore();
+
+
+const stripe = ref({});
+const cardElement = ref({});
+const customer = ref({});
+
+onMounted( async e => {
+    stripe.value = await loadStripe("pk_test_51MFWp5GviNwj0jAitwYxHRwTMb4rfjRRl0Py2pC77K9Ldr3UrQFDJi0K4TNnoILtXxGS95agDRMU5LZmoaKFaKhD00OeLXxqqW");
+
+    const elements = stripe.value.elements();
+
+    cardElement.value = elements.create('card', {
+        classes: {
+            base: 'input-box'
+        }
+    });
+
+    cardElement.value.mount('#card-element');
+})
+
+const processPayment = async () => {
+// this.paymentProcessing = true;
+
+const {paymentMethod, error} = await stripe.value.createPaymentMethod(
+    'card', cardElement.value, {
+        billing_details: {
+            name: 'Mohammed Naji',
+            email: 'moh@gmail.com',
+            address: {
+                line1: 'Palestine',
+                city: 'Gaza',
+                state: 'Gaza',
+                postal_code: '99903'
+            }
+        }
+    }
+);
+
+if (error) {
+    // this.paymentProcessing = false;
+    console.error(error);
+} else {
+    // console.log(paymentMethod);
+    customer.value.payment_method_id = paymentMethod.id;
+    customer.value.amount = user.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    customer.value.cart = JSON.stringify(user.cart);
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
+        }
+    }
+
+    axios.post('/purchase', customer.value, config)
+        .then((res) => {
+            console.log(res);
+            // this.paymentProcessing = false;
+
+            // this.$store.commit('updateOrder', response.data);
+            // this.$store.dispatch('clearCart');
+
+            // this.$router.push({ name: 'order.summary' });
+        })
+        .catch((error) => {
+            // this.paymentProcessing = false;
+            console.error(error);
+        });
+}
+}
+
+</script>
+
+
 <template>
     <div class="container py-4 flex items-center gap-3">
         <a href="../index.html" class="text-primary text-base">
@@ -51,6 +134,15 @@
             <label for="company" class="text-gray-600">Company</label>
             <input type="text" name="company" id="company" class="input-box">
         </div>
+
+        <div v-if="type=='cards'" class="flex flex-wrap -mx-2 mt-4">
+                <div class="p-2 w-full">
+                    <div class="relative">
+                        <label for="card-element" class="leading-7 text-sm text-gray-600">Credit Card Info</label>
+                        <div id="card-element"></div>
+                    </div>
+                </div>
+            </div>
     </div>
 
 </div>
@@ -120,8 +212,10 @@
         <label for="aggrement" class="text-gray-600 ml-3 cursor-pointer text-sm">I agree to the <a href="#" class="text-primary">terms &amp; conditions</a></label>
     </div>
 
-    <a href="#" class="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium">Place
-        order</a>
+    <button @click="processPayment" class="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium">Place
+        order</button>
+
+
 </div>
 
 </div>

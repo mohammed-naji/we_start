@@ -38,7 +38,7 @@ export const useUserStore = defineStore({
         }
       })
       .then(res => {
-        this.cart = res.data
+        this.cart = res.data.data
       })
     },
     addToCart(product_id, qty = 1) {

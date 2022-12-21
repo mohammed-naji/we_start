@@ -74,8 +74,9 @@ const router = createRouter({
     },
     ,
     {
-      path: '/checkout',
+      path: '/checkout/:type?',
       name: 'checkout',
+      props: true,
       component: () => import('../views/CheckoutView.vue'),
       meta: {
         Auth: true
