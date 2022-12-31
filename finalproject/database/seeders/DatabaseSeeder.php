@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Category::factory(2)->create();
+        // Category::factory(2)->create();
+
+        $this->call(PermissionSeeder::class);
     }
 }

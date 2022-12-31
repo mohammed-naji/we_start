@@ -89,7 +89,7 @@ const checkWallet = () => {
         <h3 class="font-semibold mb-4 mt-3">Choose your payment method</h3>
         <label class="block"><input type="radio" value="cards" v-model="paymentMethod"> Credit Cards</label>
         <label class="block"><input :disabled="user.user.wallet < cartTotal" type="radio" value="wallet" v-model="paymentMethod" @change="checkWallet"> Wallet</label>
-        <label class="block"><input type="radio" value="points" v-model="paymentMethod" @change="checkPoints"> Points</label>
+        <label class="block"><input :disabled="user.user.points / 100 < cartTotal" type="radio" value="points" v-model="paymentMethod" @change="checkPoints"> Points</label>
         <label class="block"><input type="radio" value="cash" v-model="paymentMethod"> Cash on Delivery</label>
 
         <hr class="my-5">

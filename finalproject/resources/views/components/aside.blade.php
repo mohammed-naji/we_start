@@ -33,12 +33,15 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.categories.index') }}" class="nav-link {{ active('admin.categories.index') }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>{{ __('admin.All Categories') }}</p>
-                </a>
-              </li>
+                @can('show-categories')
+                <li class="nav-item">
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ active('admin.categories.index') }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>{{ __('admin.All Categories') }}</p>
+                    </a>
+                  </li>
+                @endcan
+
               <li class="nav-item">
                 <a href="{{ route('admin.categories.create') }}" class="nav-link {{ active('admin.categories.create') }}">
                   <i class="far fa-circle nav-icon"></i>
@@ -57,12 +60,15 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('admin.products.index') }}" class="nav-link {{ active('admin.products.index') }}">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>{{ __('admin.All Products') }}</p>
-                </a>
-              </li>
+                @can('show-products')
+                <li class="nav-item">
+                    <a href="{{ route('admin.products.index') }}" class="nav-link {{ active('admin.products.index') }}">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>{{ __('admin.All Products') }}</p>
+                    </a>
+                  </li>
+                @endcan
+
               <li class="nav-item">
                 <a href="{{ route('admin.products.create') }}" class="nav-link {{ active('admin.products.create') }}">
                   <i class="far fa-circle nav-icon"></i>
@@ -133,6 +139,7 @@
             </a>
           </li>
 
+          @if (Auth::user()->type == 'super-admin')
           <li class="nav-item {{ active('roles', 'menu-open') }}">
             <a href="#" class="nav-link {{ active('roles') }}">
               <i class="nav-icon fas fa-shield-alt"></i>
@@ -156,6 +163,8 @@
               </li>
             </ul>
           </li>
+          @endif
+
 
           {{-- <li class="nav-item">
             <a href="#" class="nav-link">

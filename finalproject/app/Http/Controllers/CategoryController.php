@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Requests\CategoryRequest;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends Controller
 {
@@ -17,6 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        Gate::authorize('show-categories');
         // $categories = Category::withoutGlobalScope('parents')->latest('id')->paginate(10);
         // $categories = Category::parents()->latest('id')->paginate(10);
         $categories = Category::latest('id')->paginate(10);

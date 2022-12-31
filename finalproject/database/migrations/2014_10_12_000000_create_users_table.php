@@ -27,7 +27,8 @@ return new class extends Migration
             $table->integer('points')->nullable();
             $table->double('wallet')->nullable();
             $table->enum('type', ['super-admin', 'admin', 'customer'])->default('customer');
-            $table->foreignId('role_id');
+            $table->string('channels')->nullable();
+            // $table->foreignId('role_id');
             $table->rememberToken();
             $table->timestamps();
         });

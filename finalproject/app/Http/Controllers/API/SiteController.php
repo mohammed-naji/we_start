@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Resources\ProductsResource;
 use App\Http\Resources\HomeCategoriesResource;
 use App\Models\Coupon;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Payment;
+use Exception;
 
 class SiteController extends Base
 {
@@ -126,11 +130,113 @@ class SiteController extends Base
 
     public function purchase(Request $request)
     {
-        // return $request->all();
+        $user = $request->user;
+        // return ;
+
+        if($request->type == 'cards') {
+            $stripeCharge = $request->user()->charge(
+                $request->amount * 100, $request->payment_method_id
+            );
+        }
+
+        // return $stripeCharge;
+        $types = ['cash', 'wallet', 'points'];
+
+        if((isset($stripeCharge) && $stripeCharge->status == 'succeeded') || in_array($request->type, $types)) {
+
+            $proccess = 'completed';
+            if($request->type == 'cash') {
+                $proccess = 'processing';
+            }
+            DB::beginTransaction();
+            try {
+
+            // Check the payment type and increament or decrement point and wallet
+            if($request->type == 'wallet') {
+                $request->user()->decrement('wallet', $request->amount);
+            }
+
+            if($request->type == 'points') {
+                $request->user()->decrement('points', $request->amount * 100);
+            }
+
+            if($request->type == 'cards') {
+                $request->user()->increment('points', ceil($request->amount / 100));
+            }
+
+            // Create Order
+            $order = Order::create([
+                'user_id' => $request->user()->id,
+                'status' => $proccess, // ffffff
+                'total' => $request->amount,
+                'address' => json_encode([
+                    'country' => $user['country'],
+                    'city' => $user['city'],
+                    'street' => $user['street'],
+                    'zipcode' => $user['zipcode'],
+                ], JSON_UNESCAPED_UNICODE)
+            ]);
+
+            foreach($request->user()->carts as $cart) {
+                OrderItem::create([
+                    'product_id' => $cart->product_id,
+                    'user_id' => $cart->user_id,
+                    'coupon_id' => $cart->coupons,
+                    'order_id' => $order->id,
+                    'quantity' => $cart->quantity,
+                    'price' => $cart->price
+                ]);
+
+                $cart->product()->decrement('quantity', $cart->quantity);
+
+                $cart->delete();
+            }
+
+            // Add carts to order items table
+
+            // decrease product quantity
+
+            // delete carts
+
+            // create payment record
+            if($request->type != 'cash') {
+                Payment::create([
+                    'user_id' => $request->user()->id,
+                    'order_id' => $order->id,
+                    'total' => $request->amount,
+                    'transaction_id' => isset($stripeCharge) ? $stripeCharge->id : ''
+                ]);
+            }
+
+            // return success code
+
+            DB::commit();
+            }catch(Exception $e) {
+                DB::rollBack();
+                return $this->msg(0, $e->getMessage(), 404);
+            }
+
+            return $this->msg(1, 'Payment Done Successfully', 200);
+
+        }else {
+            return $this->msg(0, 'Payment Faild', 200);
+        }
+
+        // return var_dump($stripeCharge->status);
+
+    }
+
+    public function account_charge(Request $request)
+    {
         $stripeCharge = $request->user()->charge(
             $request->amount * 100, $request->payment_method_id
         );
 
-        return $stripeCharge;
+        if($stripeCharge->status == 'succeeded') {
+            $request->user()->increment('wallet', $request->amount);
+            return $this->msg(1, 'Account Charged', 200);
+        }else {
+            return $this->msg(0, 'Error', 500);
+        }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Permission;
 use App\Models\Role;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::latest('id')->paginate(10);
+        return view('admin.roles.index', compact('roles'));
     }
 
     /**
@@ -24,7 +26,8 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        $permissions = Permission::all();
+        return view('admin.roles.create', compact('permissions'));
     }
 
     /**
@@ -35,7 +38,20 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'en_name' => 'required',
+            'ar_name' => 'required'
+        ]);
+
+        $role = Role::create([
+            'name' => $request->name
+        ]);
+
+        if($request->has('permissions')) {
+            $role->permissions()->attach($request->permissions);
+        }
+
+        return redirect()->route('admin.roles.index')->with('msg', 'Role created successfully');
     }
 
     /**
@@ -46,7 +62,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+
     }
 
     /**
@@ -57,7 +73,12 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        //
+        $permissions = Permission::all();
+        $role_per = $role->permissions()->pluck('id')->toArray();
+
+        // dd($role_per);
+
+        return view('admin.roles.edit', compact('permissions', 'role', 'role_per'));
     }
 
     /**
@@ -69,7 +90,20 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        $request->validate([
+            'en_name' => 'required',
+            'ar_name' => 'required',
+        ]);
+
+        $role->update([
+            'name' => $request->name
+        ]);
+
+        if($request->has('permissions')) {
+            $role->permissions()->sync($request->permissions);
+        }
+
+        return redirect()->route('admin.roles.index')->with('msg', 'Role updated successfully');
     }
 
     /**
@@ -80,6 +114,9 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->permissions()->delete();
+
+        $role->delete();
+        return redirect()->route('admin.roles.index')->with('msg', 'Role updated successfully');
     }
 }

@@ -16,6 +16,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('adminassets/dist/css/adminlte.min.css') }}">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
   @if (app()->getLocale() == 'ar')
     <link rel="stylesheet" href="https://cdn.rtlcss.com/bootstrap/v4.2.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ asset('adminassets/dist/css/custom.css') }}">
@@ -166,7 +168,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminassets/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <!-- AdminLTE App -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{{ asset('adminassets/dist/js/adminlte.min.js') }}"></script>
+@vite(['resources/js/app.js'])
 @stack('scripts')
 </body>
 </html>

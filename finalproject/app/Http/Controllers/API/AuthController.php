@@ -101,4 +101,12 @@ class AuthController extends Base
 
         return $this->msg(1, 'Register Successfully', 200, $data);
     }
+
+    public function refresh_user($id)
+    {
+        $data = [
+            'user' => User::find($id)
+        ];
+        return $this->msg(1, 'Refresh Successfully', 200, $data);
+    }
 }

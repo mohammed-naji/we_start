@@ -1,7 +1,83 @@
 <script setup>
+import { loadStripe } from '@stripe/stripe-js'
+import { onMounted, ref } from 'vue';
+import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
+
+const router = useRouter();
 const user = useUserStore();
 
+const stripe = ref({})
+const cardElement = ref({});
+const customer = ref({});
+const amount = ref(0);
+const paymentProcessing = ref(false);
+
+onMounted(async e => {
+    stripe.value = await loadStripe("pk_test_51MFWp5GviNwj0jAitwYxHRwTMb4rfjRRl0Py2pC77K9Ldr3UrQFDJi0K4TNnoILtXxGS95agDRMU5LZmoaKFaKhD00OeLXxqqW");
+
+    const elements = stripe.value.elements();
+
+    cardElement.value = elements.create('card', {
+        classes: {
+            base: 'input-box'
+        }
+    });
+
+    cardElement.value.mount('#card-element');
+})
+
+const processPayment = async () => {
+paymentProcessing.value = true;
+const {paymentMethod, error} = await stripe.value.createPaymentMethod(
+    'card', cardElement.value, {
+        billing_details: {
+            name: user.user.name,
+            email: user.user.email,
+            address: {
+                line1: user.user.country,
+                city: user.user.city,
+                state: user.user.street,
+                postal_code: user.user.zipcode
+            }
+        }
+    }
+);
+
+if (error) {
+    paymentProcessing.value = false;
+    console.error(error);
+} else {
+
+    customer.value.payment_method_id = paymentMethod.id
+    customer.value.amount = amount.value
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${user.token}`
+        }
+    }
+
+    axios.post('/account-charge', customer.value, config)
+        .then((res) => {
+            paymentProcessing.value = false;
+
+            if(res.data.status == 1) {
+                user.refreshUser();
+                toastr.success(res.data.message)
+                router.push('/account')
+            }else {
+                toastr.error(res.data.message)
+            }
+
+        })
+        .catch((error) => {
+            paymentProcessing.value = false;
+            console.error(error);
+        });
+}
+}
 </script>
 <template>
   <div class="container py-4 flex items-center gap-3">
@@ -99,39 +175,17 @@ const user = useUserStore();
 <!-- ./sidebar -->
 
 <!-- info -->
-<div class="col-span-9 grid grid-cols-3 gap-4">
+<div class="col-span-9 grid grid-cols-2 gap-4">
+
+
 
     <div class="shadow rounded bg-white px-4 pt-6 pb-8">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-medium text-gray-800 text-lg">Your Points</h3>
-            
-        </div>
-        <div class="space-y-1">
-            <h4 class="text-gray-700 font-medium text-4xl">{{ user.user.points > 0 ? user.user.points : 0 }}</h4>
-        </div>
-    </div>
+        <input type="number" v-model="amount" class="input-box mb-3" placeholder="Amount" />
+        <div id="card-element" class="mb-3">
 
-    <div class="shadow rounded bg-white px-4 pt-6 pb-8">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-medium text-gray-800 text-lg">Your Wallet</h3>
-            <router-link class="text-primary" to="/account/charge">Charge</router-link>
         </div>
-        <div class="space-y-1">
-            <h4 class="text-gray-700 font-medium text-4xl">{{ user.user.wallet > 0 ? user.user.wallet : 0 }}</h4>
-        </div>
-    </div>
 
-    <div class="shadow rounded bg-white px-4 pt-6 pb-8">
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="font-medium text-gray-800 text-lg">Billing address</h3>
-            <a href="#" class="text-primary">Edit</a>
-        </div>
-        <div class="space-y-1">
-            <h4 class="text-gray-700 font-medium">John Doe</h4>
-            <p class="text-gray-800">Medan, North Sumatera</p>
-            <p class="text-gray-800">20317</p>
-            <p class="text-gray-800">0811 8877 988</p>
-        </div>
+        <button @click="processPayment" class="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium" v-text="paymentProcessing ? 'Charging' : 'Charge' "></button>
     </div>
 
 </div>
@@ -139,3 +193,23 @@ const user = useUserStore();
 
 </div>
 </template>
+
+<style>
+.input-box {
+  display: block;
+  width: 100%;
+  border-radius: 0.25rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+
+</style>

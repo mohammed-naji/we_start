@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -18,6 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Gate::authorize('show-products');
         $products = Product::latest('id')->paginate(10);
         return view('admin.products.index', compact('products'));
     }

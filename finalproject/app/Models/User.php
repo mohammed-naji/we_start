@@ -47,10 +47,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class)->withDefault();
-    }
+    // public function role()
+    // {
+    //     return $this->belongsTo(Role::class)->withDefault();
+    // }
 
     public function image()
     {
@@ -96,5 +96,10 @@ class User extends Authenticatable
                 return $src;
             },
         );
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
     }
 }

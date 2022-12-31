@@ -16,6 +16,12 @@ export const useUserStore = defineStore({
     updateUser(user) {
       this.user = user
     },
+    refreshUser() {
+      axios.get('/refresh-user/'+this.user.id)
+      .then(res => {
+        this.user = res.data.data.user
+      })
+    },
     updateToken(token) {
       this.token = token
     },

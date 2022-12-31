@@ -72,7 +72,11 @@ const router = createRouter({
       name: 'account',
       component: () => import('../views/AccountView.vue')
     },
-    ,
+    {
+      path: '/account/charge',
+      name: 'account.charge',
+      component: () => import('../views/ChargeView.vue')
+    },
     {
       path: '/checkout/:type?',
       name: 'checkout',

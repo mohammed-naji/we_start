@@ -1,58 +1,96 @@
 <script setup>
 
 import { loadStripe } from '@stripe/stripe-js'
-
 import { onMounted, ref } from "vue";
-
 import { useUserStore } from "../stores/user";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const user = useUserStore();
 
+const loggedinuser = ref({
+    name: user.user.name,
+    email: user.user.email,
+    phone: user.user.phone,
+    country: user.user.country,
+    city: user.user.city,
+    street: user.user.street,
+    zipcode: user.user.zipcode,
+})
+
+// const aa = user.user
+
+// const loggedinuser = ref(aa)
+
+let props = defineProps({
+    type: {
+        type: String
+    }
+})
 
 const stripe = ref({});
 const cardElement = ref({});
 const customer = ref({});
+const paymentProcessing = ref(false);
+const accept = ref(0);
 
 onMounted( async e => {
-    stripe.value = await loadStripe("pk_test_51MFWp5GviNwj0jAitwYxHRwTMb4rfjRRl0Py2pC77K9Ldr3UrQFDJi0K4TNnoILtXxGS95agDRMU5LZmoaKFaKhD00OeLXxqqW");
+    if(props.type.length == 0 || props.type == 'cards') {
+        stripe.value = await loadStripe("pk_test_51MFWp5GviNwj0jAitwYxHRwTMb4rfjRRl0Py2pC77K9Ldr3UrQFDJi0K4TNnoILtXxGS95agDRMU5LZmoaKFaKhD00OeLXxqqW");
 
-    const elements = stripe.value.elements();
+        const elements = stripe.value.elements();
 
-    cardElement.value = elements.create('card', {
-        classes: {
-            base: 'input-box'
-        }
-    });
+        cardElement.value = elements.create('card', {
+            classes: {
+                base: 'input-box'
+            }
+        });
 
-    cardElement.value.mount('#card-element');
+        cardElement.value.mount('#card-element');
+    }
 })
 
 const processPayment = async () => {
-// this.paymentProcessing = true;
-
-const {paymentMethod, error} = await stripe.value.createPaymentMethod(
-    'card', cardElement.value, {
-        billing_details: {
-            name: 'Mohammed Naji',
-            email: 'moh@gmail.com',
-            address: {
-                line1: 'Palestine',
-                city: 'Gaza',
-                state: 'Gaza',
-                postal_code: '99903'
+paymentProcessing.value = true;
+let err = false;
+let pMethod = '';
+if(props.type.length == 0 || props.type == 'cards') {
+    const {paymentMethod, error} = await stripe.value.createPaymentMethod(
+        'card', cardElement.value, {
+            billing_details: {
+                name: loggedinuser.name,
+                email: loggedinuser.email,
+                address: {
+                    line1: loggedinuser.country,
+                    city: loggedinuser.city,
+                    state: loggedinuser.street,
+                    postal_code: loggedinuser.zipcode
+                }
             }
         }
-    }
-);
+    );
 
-if (error) {
-    // this.paymentProcessing = false;
+    err = error;
+    pMethod = paymentMethod;
+    // if (error) {
+    //     paymentProcessing.value = false;
+    //     console.error(error);
+    // } 
+}
+
+if (err) {
+    paymentProcessing.value = false;
     console.error(error);
 } else {
-    // console.log(paymentMethod);
-    customer.value.payment_method_id = paymentMethod.id;
+    // console.log(pMethod);
+    if(pMethod) {
+        customer.value.payment_method_id = paymentMethod.id
+    }else {
+        customer.value.payment_method_id = ''
+    }
     customer.value.amount = user.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    customer.value.cart = JSON.stringify(user.cart);
+    customer.value.user = loggedinuser;
+    customer.value.type = props.type;
 
     const config = {
         headers: {
@@ -64,7 +102,18 @@ if (error) {
     axios.post('/purchase', customer.value, config)
         .then((res) => {
             console.log(res);
-            // this.paymentProcessing = false;
+            paymentProcessing.value = false;
+
+            if(res.data.status == 1) {
+                user.updateCart();
+                user.refreshUser();
+                toastr.success(res.data.message)
+                router.push('/')
+            }else {
+                toastr.error(res.data.message)
+            }
+
+            
 
             // this.$store.commit('updateOrder', response.data);
             // this.$store.dispatch('clearCart');
@@ -72,7 +121,7 @@ if (error) {
             // this.$router.push({ name: 'order.summary' });
         })
         .catch((error) => {
-            // this.paymentProcessing = false;
+            paymentProcessing.value = false;
             console.error(error);
         });
 }
@@ -96,46 +145,40 @@ if (error) {
 <div class="col-span-8 border border-gray-200 p-4 rounded">
     <h3 class="text-lg font-medium capitalize mb-4">Checkout</h3>
     <div class="space-y-4">
-        <div class="grid grid-cols-2 gap-4">
-            <div>
-                <label for="first-name" class="text-gray-600">First Name <span class="text-primary">*</span></label>
-                <input type="text" name="first-name" id="first-name" class="input-box">
-            </div>
-            <div>
-                <label for="last-name" class="text-gray-600">Last Name <span class="text-primary">*</span></label>
-                <input type="text" name="last-name" id="last-name" class="input-box">
-            </div>
-        </div>
         <div>
-            <label for="company" class="text-gray-600">Company</label>
-            <input type="text" name="company" id="company" class="input-box">
-        </div>
-        <div>
-            <label for="region" class="text-gray-600">Country/Region</label>
-            <input type="text" name="region" id="region" class="input-box">
-        </div>
-        <div>
-            <label for="address" class="text-gray-600">Street address</label>
-            <input type="text" name="address" id="address" class="input-box">
-        </div>
-        <div>
-            <label for="city" class="text-gray-600">City</label>
-            <input type="text" name="city" id="city" class="input-box">
-        </div>
-        <div>
-            <label for="phone" class="text-gray-600">Phone number</label>
-            <input type="text" name="phone" id="phone" class="input-box">
+            <label for="first-name" class="text-gray-600">Full Name <span class="text-primary">*</span></label>
+            <input type="text" disabled name="first-name" id="first-name" class="input-box" v-model="loggedinuser.name">
         </div>
         <div>
             <label for="email" class="text-gray-600">Email address</label>
-            <input type="email" name="email" id="email" class="input-box">
+            <input type="email" disabled name="email" id="email" class="input-box" v-model="loggedinuser.email">
         </div>
         <div>
-            <label for="company" class="text-gray-600">Company</label>
-            <input type="text" name="company" id="company" class="input-box">
+            <label for="phone" class="text-gray-600">Phone number</label>
+            <input type="text" disabled name="phone" id="phone" class="input-box" v-model="loggedinuser.phone">
         </div>
 
-        <div v-if="type=='cards'" class="flex flex-wrap -mx-2 mt-4">
+        <div>
+            <label for="region" class="text-gray-600">Country/Region</label>
+            <input type="text" name="region" id="region" class="input-box" v-model="loggedinuser.country">
+        </div>
+
+        <div>
+            <label for="city" class="text-gray-600">City</label>
+            <input type="text" name="city" id="city" class="input-box" v-model="loggedinuser.city">
+        </div>
+
+        <div>
+            <label for="address" class="text-gray-600">Street address</label>
+            <input type="text" name="address" id="address" class="input-box" v-model="loggedinuser.street">
+        </div>
+        
+        <div>
+            <label for="company" class="text-gray-600">Zip Code</label>
+            <input type="text" name="company" id="company" class="input-box" v-model="loggedinuser.zipcode">
+        </div>
+
+        <div v-if="props.type.length == 0 || props.type=='cards'" class="flex flex-wrap -mx-2 mt-4">
                 <div class="p-2 w-full">
                     <div class="relative">
                         <label for="card-element" class="leading-7 text-sm text-gray-600">Credit Card Info</label>
@@ -208,12 +251,11 @@ if (error) {
     </div>
 
     <div class="flex items-center mb-4 mt-2">
-        <input type="checkbox" name="aggrement" id="aggrement" class="text-primary focus:ring-0 rounded-sm cursor-pointer w-3 h-3">
+        <input type="checkbox" name="aggrement" id="aggrement" class="text-primary focus:ring-0 rounded-sm cursor-pointer w-3 h-3" value="1" v-model="accept">
         <label for="aggrement" class="text-gray-600 ml-3 cursor-pointer text-sm">I agree to the <a href="#" class="text-primary">terms &amp; conditions</a></label>
     </div>
 
-    <button @click="processPayment" class="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium">Place
-        order</button>
+    <button @click="processPayment" :disabled="!accept" class="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium" v-text="paymentProcessing ? 'Proccessing' : 'Place Order' "></button>
 
 
 </div>
